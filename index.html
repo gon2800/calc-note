@@ -69,7 +69,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   white-space:nowrap;
   user-select:none;
 }
-.tab-item.active{background:var(--card);color:var(--accent);font-weight:800;}
+.tab-item.active{background:var(--card);color:var(--accent);font-weight:800;border-bottom:1px solid var(--card);margin-bottom:-1px;}
 .tab-item.active::before,
 .tab-item.active::after{
   content:"";
@@ -91,6 +91,8 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .screen.active{display:block;}
 .tab-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;}
 .tab-card + .tab-card{margin-top:12px;}
+.tab-card.corner-first{border-radius:0 var(--radius) var(--radius) var(--radius);}
+.tab-card.corner-last{border-radius:var(--radius) 0 var(--radius) var(--radius);}
 
 /* ══════════════════════════════
    계산기
@@ -302,7 +304,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 
   <!-- ═══ 계산기 ═══ -->
   <div id="screen-calc" class="screen active">
-   <div class="tab-card">
+   <div class="tab-card corner-first">
     <div class="calc-display">
       <div class="calc-history" id="calcHistory"></div>
       <hr class="divider history-sep" id="historySep" style="display:none">
@@ -513,11 +515,18 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 ══════════════════════════════ */
 const TABS = ['calc','fx','unit','age','oa'];
 function switchTab(t) {
+  const idx = TABS.indexOf(t);
   document.querySelectorAll('.tab-item').forEach((el,i) =>
     el.classList.toggle('active', TABS[i] === t));
   document.querySelectorAll('.screen').forEach(el =>
     el.classList.remove('active'));
-  document.getElementById('screen-' + t).classList.add('active');
+  const screen = document.getElementById('screen-' + t);
+  screen.classList.add('active');
+  const card = screen.querySelector('.tab-card');
+  if (card) {
+    card.classList.toggle('corner-first', idx === 0);
+    card.classList.toggle('corner-last', idx === TABS.length - 1);
+  }
 }
 
 /* ══════════════════════════════
