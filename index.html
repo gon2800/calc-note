@@ -13,7 +13,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:#4A46B0;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;display:flex;justify-content:center;align-items:flex-start;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;display:flex;justify-content:center;align-items:flex-start;background:red;}
 
 #app{
   width:100%;
@@ -167,18 +167,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 }
 .unit-tab.active{background:#5B56C8;color:#fff;border-color:#5B56C8;}
 .unit-card{
-  background:#fff;border-radius:12px;
+  background:#fff;border-radius:12px;overflow:hidden;
   border:1.5px solid #C0BDED;padding:16px;
 }
 .unit-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;overflow:hidden;}
 .unit-row:last-child{margin-bottom:0;}
 .unit-select{
-  width:130px;height:38px;border-radius:8px;flex-shrink:0;
+  width:120px;height:38px;border-radius:8px;flex-shrink:0;
   border:1.5px solid #C0BDED;padding:0 8px;
   font-size:12px;background:#F8F7FF;color:#1A1864;
 }
 .unit-val{
-  flex:1;min-width:0;height:38px;border-radius:8px;
+  flex:1;min-width:0;width:0;height:38px;border-radius:8px;
   border:1.5px solid #C0BDED;padding:0 10px;
   font-size:16px;background:#fff;color:#1A1864;text-align:right;
 }
