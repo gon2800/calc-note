@@ -48,7 +48,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 .tab-bar::-webkit-scrollbar{display:none;}
 .tab-item{
   flex:1;min-width:54px;
-  padding:9px 2px;
+  padding:13px 2px 12px;
   text-align:center;
   font-size:10px;
   color:rgba(255,255,255,0.6);
@@ -58,7 +58,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   user-select:none;
 }
 .tab-item.active{color:#fff;border-bottom:2px solid #fff;font-weight:500;}
-.tab-item .ti{display:block;font-size:17px;margin-bottom:2px;}
+.tab-item .ti{display:block;font-size:20px;margin-bottom:4px;}
 
 /* ── 스크린 ── */
 .screen{display:none;padding:10px;overflow-y:auto;flex:1;}
@@ -95,8 +95,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   text-align:right;word-break:break-all;
   line-height:1.3;margin-top:4px;
 }
-.calc-hint{font-size:11px;color:#8B87CC;text-align:right;margin-top:4px;min-height:15px;}
-
 /* 버튼 그리드 */
 .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
 .btn{
@@ -129,23 +127,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   padding:14px;margin-bottom:10px;
 }
 .rate-label{font-size:12px;color:#888;margin-bottom:6px;}
-.rate-row{display:flex;gap:8px;align-items:center;}
+.rate-row{display:flex;gap:8px;align-items:center;overflow:hidden;}
 .rate-select{
-  flex:1;height:40px;border-radius:8px;
+  flex:1;min-width:0;height:40px;border-radius:8px;
   border:1.5px solid #C0BDED;padding:0 8px;
   font-size:13px;background:#F8F7FF;color:#1A1864;
 }
 .rate-input{
-  flex:1.5;height:40px;border-radius:8px;
+  flex:1.5;min-width:0;width:0;height:40px;border-radius:8px;
   border:2px solid #4B47B8;padding:0 10px;
   font-size:18px;font-weight:500;
   background:#fff;color:#1A1864;text-align:right;
 }
 .rate-swap{
-  width:36px;height:36px;border-radius:50%;
-  background:#EEEDFE;border:2px solid #A9A6E0;
+  width:36px;height:36px;
+  background:transparent;border:none;
   cursor:pointer;display:flex;align-items:center;
-  justify-content:center;color:#5B56C8;font-size:16px;
+  justify-content:center;color:#5B56C8;font-size:20px;
 }
 .rate-info{font-size:11px;color:#AAA;text-align:right;margin-top:6px;}
 .quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
@@ -192,11 +190,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   border:1.5px solid #C0BDED;padding:16px;margin-bottom:12px;
 }
 .field-label{font-size:13px;color:#666;margin-bottom:8px;font-weight:500;}
+.date-input-row{display:flex;gap:8px;}
 .date-input{
-  width:100%;height:42px;border-radius:8px;
-  border:1.5px solid #C0BDED;padding:0 12px;
+  flex:1;min-width:0;height:42px;border-radius:8px;
+  border:1.5px solid #C0BDED;padding:0 8px;
   font-size:16px;color:#1A1864;background:#fff;
+  text-align:center;
 }
+.date-input::-webkit-outer-spin-button,
+.date-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.date-input[type=number]{-moz-appearance:textfield;}
+.date-input-year{flex:1.3;}
 .primary-btn{
   width:100%;height:46px;border-radius:12px;
   background:#5B56C8;color:#fff;border:none;
@@ -295,7 +299,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
       <hr class="history-sep" id="historySep" style="display:none">
       <div class="calc-expr-row" id="calcExpr">0</div>
       <div class="calc-result-row" id="calcPreview"></div>
-      <div class="calc-hint" id="calcHint"></div>
     </div>
     <div class="calc-grid">
       <button class="btn btn-clear"  onclick="ci('C')">C</button>
@@ -339,7 +342,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
           <option value="AUD">🇦🇺 AUD 달러</option>
           <option value="PEN">🇵🇪 PEN 솔</option>
         </select>
-        <input class="rate-input" id="fromVal" type="number" value="10000" oninput="convertFX()">
+        <input class="rate-input" id="fromVal" type="text" inputmode="decimal" value="10,000" oninput="formatWithCommas(this,true);convertFX()">
       </div>
     </div>
     <div style="text-align:center;margin:-4px 0;position:relative;z-index:1;">
@@ -360,7 +363,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
           <option value="AUD">🇦🇺 AUD 달러</option>
           <option value="PEN">🇵🇪 PEN 솔</option>
         </select>
-        <input class="rate-input" id="toVal" type="number" readonly
+        <input class="rate-input" id="toVal" type="text" readonly
           style="background:#F8F7FF;border-color:#C0BDED;">
       </div>
       <div class="rate-info" id="rateInfo"></div>
@@ -397,7 +400,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   <div id="screen-age" class="screen">
     <div class="age-card">
       <div class="field-label">생년월일</div>
-      <input class="date-input" type="date" id="birthDate" onchange="calcAge()">
+      <div class="date-input-row">
+        <input class="date-input date-input-year" type="number" id="birthYear" placeholder="년(YYYY)" inputmode="numeric" oninput="calcAge()">
+        <input class="date-input" type="number" id="birthMonth" placeholder="월" inputmode="numeric" oninput="calcAge()">
+        <input class="date-input" type="number" id="birthDay" placeholder="일" inputmode="numeric" oninput="calcAge()">
+      </div>
       <button class="primary-btn" onclick="calcAge()">나이 계산</button>
     </div>
     <div id="ageResults" class="hidden">
@@ -428,12 +435,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
       <div class="oa-title">1구좌 노출 분석</div>
       <div class="oa-row">
         <span class="oa-label">월 광고료</span>
-        <input class="oa-input" id="oa_cost" type="number" placeholder="0" oninput="calcOA()">
+        <input class="oa-input" id="oa_cost" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcOA()">
         <span class="oa-unit">원</span>
       </div>
       <div class="oa-row">
         <span class="oa-label">일 노출횟수</span>
-        <input class="oa-input" id="oa_daily" type="number" placeholder="0" oninput="calcOA()">
+        <input class="oa-input" id="oa_daily" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcOA()">
         <span class="oa-unit">회</span>
       </div>
       <div class="oa-row">
@@ -447,7 +454,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
       <div class="oa-title">재원 계산</div>
       <div class="oa-row">
         <span class="oa-label">구좌 운영</span>
-        <input class="oa-input" id="oa_slots" type="number" placeholder="0" oninput="calcOA()">
+        <input class="oa-input" id="oa_slots" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcOA()">
         <span class="oa-unit">구좌</span>
       </div>
       <div class="oa-row">
@@ -513,6 +520,7 @@ function tryEval(expr) {
 }
 
 function ci(k) {
+  if (navigator.vibrate) navigator.vibrate(10);
   if (k === 'C') {
     curExpr = ''; curDisp = '0'; lastRes = null; evaled = false; parenD = 0;
   } else if (k === '()') {
@@ -589,8 +597,6 @@ function renderCalc() {
     if (r !== null) preview = '= ' + numFmt(r);
   }
   document.getElementById('calcPreview').textContent = preview;
-  document.getElementById('calcHint').textContent =
-    evaled && lastRes !== null ? '연산자를 누르면 이어서 계산' : '';
 }
 
 function useHist(i) {
@@ -601,6 +607,29 @@ function useHist(i) {
 }
 
 renderCalc();
+
+/* ══════════════════════════════
+   숫자 입력 천단위 콤마
+══════════════════════════════ */
+function formatWithCommas(el, allowDecimal) {
+  let v = el.value.replace(/,/g, '');
+  if (allowDecimal) {
+    v = v.replace(/[^\d.]/g, '');
+    const firstDot = v.indexOf('.');
+    if (firstDot !== -1) {
+      v = v.slice(0, firstDot + 1) + v.slice(firstDot + 1).replace(/\./g, '');
+    }
+    const [intPart, decPart] = v.split('.');
+    const fmtInt = (intPart || '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    el.value = decPart !== undefined ? fmtInt + '.' + decPart : fmtInt;
+  } else {
+    v = v.replace(/\D/g, '');
+    el.value = v.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+}
+function numVal(el) {
+  return parseFloat(el.value.replace(/,/g, '')) || 0;
+}
 
 /* ══════════════════════════════
    환율
@@ -627,11 +656,13 @@ function convertFX() {
   if (!Object.keys(fxRates).length) return;
   const from = document.getElementById('fromCur').value;
   const to   = document.getElementById('toCur').value;
-  const val  = parseFloat(document.getElementById('fromVal').value) || 0;
+  const val  = numVal(document.getElementById('fromVal'));
   const rate = (1 / fxRates[from]) * fxRates[to];
   const result = val * rate;
   document.getElementById('toVal').value =
-    result < 0.01 ? result.toFixed(6) : result.toFixed(2);
+    result !== 0 && Math.abs(result) < 0.01
+      ? result.toFixed(6)
+      : numFmt(parseFloat(result.toFixed(2)));
   const r1 = rate < 0.01 ? rate.toFixed(6) : rate.toFixed(4);
   document.getElementById('rateInfo').textContent = `1 ${from} = ${r1} ${to}`;
 }
@@ -663,7 +694,7 @@ function renderQuick() {
 function setQuick(c) {
   document.getElementById('fromCur').value = 'KRW';
   document.getElementById('toCur').value   = c;
-  document.getElementById('fromVal').value = 10000;
+  document.getElementById('fromVal').value = '10,000';
   convertFX();
 }
 
@@ -767,9 +798,13 @@ loadUnitSelects();
    나이 계산
 ══════════════════════════════ */
 function calcAge() {
-  const birth = document.getElementById('birthDate').value;
-  if (!birth) return;
-  const b  = new Date(birth), t = new Date();
+  const y = parseInt(document.getElementById('birthYear').value, 10);
+  const m = parseInt(document.getElementById('birthMonth').value, 10);
+  const d = parseInt(document.getElementById('birthDay').value, 10);
+  if (!y || !m || !d || y < 1000 || m < 1 || m > 12 || d < 1 || d > 31) return;
+  const b = new Date(y, m - 1, d);
+  if (b.getFullYear() !== y || b.getMonth() !== m - 1 || b.getDate() !== d) return;
+  const t = new Date();
   const by = b.getFullYear(), bm = b.getMonth(), bd = b.getDate();
   const ty = t.getFullYear(), tm = t.getMonth(), td = t.getDate();
   const intAge = ty - by - (tm < bm || (tm === bm && td < bd) ? 1 : 0);
@@ -791,9 +826,9 @@ function calcAge() {
    옥외광고
 ══════════════════════════════ */
 function calcOA() {
-  const cost  = parseFloat(document.getElementById('oa_cost').value)  || 0;
-  const daily = parseFloat(document.getElementById('oa_daily').value) || 0;
-  const slots = parseFloat(document.getElementById('oa_slots').value) || 0;
+  const cost  = numVal(document.getElementById('oa_cost'));
+  const daily = numVal(document.getElementById('oa_daily'));
+  const slots = numVal(document.getElementById('oa_slots'));
   const cpe         = daily > 0 ? cost / (daily * 30) : 0;
   const monthlyRev  = cost * slots;
   const yearlyRev   = monthlyRev * 12;
