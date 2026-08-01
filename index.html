@@ -99,10 +99,8 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 ══════════════════════════════ */
 .calc-display{
   background:transparent;
-  padding:0 0 14px;
-  margin-bottom:14px;
-  border-bottom:2px solid var(--line-strong);
-  min-height:140px;
+  height:140px;
+  overflow:hidden;
   display:flex;flex-direction:column;
 }
 .calc-history{overflow-y:auto;max-height:64px;margin-bottom:4px;}
@@ -139,7 +137,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .btn-op{background:var(--accent-soft);color:var(--accent);font-size:24px;font-weight:700;}
 .btn-eq{background:var(--accent);color:#fff;font-size:26px;}
 .btn-clear{background:var(--danger-soft);color:var(--danger);font-size:20px;font-weight:700;}
-.btn-back{background:var(--bg);color:var(--sub);font-size:18px;}
+.btn-back{background:var(--card);color:var(--sub);font-size:28px;}
 
 /* ══════════════════════════════
    환율
@@ -148,8 +146,9 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .rate-row{display:flex;gap:8px;align-items:center;overflow:hidden;}
 .rate-select{
   flex:1;min-width:0;height:40px;border-radius:10px;
-  border:1.5px solid var(--line);padding:0 10px 0 8px;
-  font-size:13px;background:var(--bg);color:var(--ink);text-align:right;
+  border:1.5px solid var(--line);padding:0 8px;
+  font-size:13px;background:var(--bg);color:var(--ink);text-align:center;
+  -webkit-appearance:none;appearance:none;
 }
 .rate-input{
   flex:1.5;min-width:0;width:0;height:40px;border-radius:10px;
@@ -179,15 +178,16 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .unit-tab{
   flex:1;text-align:center;
   padding:8px 4px;border-radius:9px;font-size:12px;font-weight:700;
-  border:none;background:transparent;
+  border:1.5px solid var(--line);background:transparent;
   cursor:pointer;color:var(--sub);
 }
 .unit-tab.active{background:var(--card);color:var(--accent);box-shadow:var(--shadow);}
 .unit-row{display:flex;gap:8px;align-items:center;overflow:hidden;}
 .unit-select{
   width:120px;height:38px;border-radius:10px;flex-shrink:0;
-  border:1.5px solid var(--line);padding:0 10px 0 8px;
-  font-size:12px;background:var(--bg);color:var(--ink);text-align:right;
+  border:1.5px solid var(--line);padding:0 8px;
+  font-size:12px;background:var(--bg);color:var(--ink);text-align:center;
+  -webkit-appearance:none;appearance:none;
 }
 .unit-val{
   flex:1;min-width:0;width:0;height:38px;border-radius:10px;
@@ -250,7 +250,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   display:flex;align-items:center;
   padding:8px 0;border-bottom:2px solid var(--line-strong);
 }
-.oa-row:last-child{border-bottom:none;}
+.oa-row:last-of-type{border-bottom:none;}
 .oa-label{font-size:13px;color:var(--sub);flex:1;}
 .oa-unit{font-size:12px;color:var(--sub);width:30px;text-align:right;margin-left:4px;flex-shrink:0;}
 .oa-input{
@@ -307,10 +307,12 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
    <div class="tab-card corner-first">
     <div class="calc-display">
       <div class="calc-history" id="calcHistory"></div>
-      <hr class="divider history-sep" id="historySep" style="display:none">
+      <div class="history-sep" id="historySep" style="display:none"></div>
       <div class="calc-expr-row" id="calcExpr">0</div>
       <div class="calc-result-row" id="calcPreview"></div>
     </div>
+   </div>
+   <div class="tab-card">
     <div class="calc-back-row">
       <button class="btn btn-back"   onclick="ci('⌫')">⌫</button>
     </div>
@@ -378,7 +380,8 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
         </div>
         <div class="rate-info" id="rateInfo"></div>
       </div>
-      <hr class="divider">
+   </div>
+   <div class="tab-card">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
         <span style="font-size:12px;color:var(--sub);font-weight:600;">주요 통화 (KRW 기준)</span>
         <span style="font-size:11px;color:var(--sub);" id="fxStatusText">환율 불러오는 중...</span>
@@ -405,7 +408,8 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
         <input class="unit-val" id="toUnitVal" type="number" placeholder="0" oninput="convertUnit('to')">
       </div>
       <div class="unit-eq-text" id="unitEqText"></div>
-      <hr class="divider">
+   </div>
+   <div class="tab-card">
       <div class="unit-tabs">
         <div class="unit-tab active" onclick="switchUnit('length',this)">길이</div>
         <div class="unit-tab" onclick="switchUnit('weight',this)">무게</div>
@@ -420,9 +424,9 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   <div id="screen-age" class="screen">
    <div class="tab-card">
       <div class="date-input-row">
-        <input class="date-input date-input-year" type="tel" id="birthYear" placeholder="년(YYYY)" inputmode="numeric" maxlength="4" oninput="ageInputMove(this,'birthMonth',4)">
-        <input class="date-input" type="tel" id="birthMonth" placeholder="월" inputmode="numeric" maxlength="2" oninput="ageInputMove(this,'birthDay',2)">
-        <input class="date-input" type="tel" id="birthDay" placeholder="일" inputmode="numeric" maxlength="2" oninput="ageInputMove(this,null,2)">
+        <input class="date-input date-input-year" type="tel" id="birthYear" placeholder="YYYY" inputmode="numeric" maxlength="4" oninput="ageInputMove(this,'birthMonth',4)">
+        <input class="date-input" type="tel" id="birthMonth" placeholder="MM" inputmode="numeric" maxlength="2" oninput="ageInputMove(this,'birthDay',2)">
+        <input class="date-input" type="tel" id="birthDay" placeholder="DD" inputmode="numeric" maxlength="2" oninput="ageInputMove(this,null,2)">
       </div>
       <button class="primary-btn" onclick="calcAge()">나이 계산</button>
       <div id="ageResults" class="hidden">
