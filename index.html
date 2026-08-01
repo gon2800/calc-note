@@ -137,7 +137,8 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .btn-op{background:var(--accent-soft);color:var(--accent);font-size:24px;font-weight:700;}
 .btn-eq{background:var(--accent);color:#fff;font-size:26px;}
 .btn-clear{background:var(--danger-soft);color:var(--danger);font-size:20px;font-weight:700;}
-.btn-back{background:var(--card);color:var(--sub);font-size:28px;}
+.btn-back{background:var(--accent);color:#fff;font-size:22px;height:40px;}
+.calc-keypad-card{padding-top:8px;}
 
 /* ══════════════════════════════
    환율
@@ -181,7 +182,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   border:1.5px solid var(--line);background:transparent;
   cursor:pointer;color:var(--sub);
 }
-.unit-tab.active{background:var(--card);color:var(--accent);box-shadow:var(--shadow);}
+.unit-tab.active{background:var(--card);color:var(--accent);border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
 .unit-row{display:flex;gap:8px;align-items:center;overflow:hidden;}
 .unit-select{
   width:120px;height:38px;border-radius:10px;flex-shrink:0;
@@ -250,12 +251,12 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   display:flex;align-items:center;
   padding:8px 0;border-bottom:2px solid var(--line-strong);
 }
-.oa-row:last-of-type{border-bottom:none;}
+.oa-row:last-child{border-bottom:none;}
 .oa-label{font-size:13px;color:var(--sub);flex:1;}
 .oa-unit{font-size:12px;color:var(--sub);width:30px;text-align:right;margin-left:4px;flex-shrink:0;}
 .oa-input{
   width:130px;text-align:right;
-  background:var(--accent-soft);border:1.5px solid var(--accent);
+  background:var(--accent-soft);border:2px solid var(--accent);
   border-radius:10px;padding:5px 8px;
   font-size:15px;color:var(--ink);font-weight:600;
 }
@@ -312,7 +313,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
       <div class="calc-result-row" id="calcPreview"></div>
     </div>
    </div>
-   <div class="tab-card">
+   <div class="tab-card calc-keypad-card">
     <div class="calc-back-row">
       <button class="btn btn-back"   onclick="ci('⌫')">⌫</button>
     </div>
@@ -396,7 +397,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
       <div class="unit-row">
         <select class="unit-select" id="fromUnit" onchange="convertUnit()"></select>
         <input class="unit-val" id="fromUnitVal" type="number" placeholder="0"
-          oninput="convertUnit('from')" style="border-color:var(--accent);">
+          oninput="convertUnit('from')" style="border:2px solid var(--accent);">
       </div>
       <div style="text-align:center;">
         <button class="rate-swap" onclick="swapUnit()">
@@ -422,15 +423,15 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 
   <!-- ═══ 나이 ═══ -->
   <div id="screen-age" class="screen">
-   <div class="tab-card">
+   <div class="tab-card corner-first">
       <div class="date-input-row">
         <input class="date-input date-input-year" type="tel" id="birthYear" placeholder="YYYY" inputmode="numeric" maxlength="4" oninput="ageInputMove(this,'birthMonth',4)">
         <input class="date-input" type="tel" id="birthMonth" placeholder="MM" inputmode="numeric" maxlength="2" oninput="ageInputMove(this,'birthDay',2)">
         <input class="date-input" type="tel" id="birthDay" placeholder="DD" inputmode="numeric" maxlength="2" oninput="ageInputMove(this,null,2)">
       </div>
       <button class="primary-btn" onclick="calcAge()">나이 계산</button>
-      <div id="ageResults" class="hidden">
-        <hr class="divider">
+   </div>
+   <div id="ageResults" class="tab-card hidden">
         <div class="age-results">
           <div class="age-result-card">
             <div class="result-label">세는 나이</div>
@@ -463,7 +464,6 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
             <div class="result-sub" id="retire65Left">–</div>
           </div>
         </div>
-      </div>
    </div>
   </div>
 
@@ -471,39 +471,43 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   <div id="screen-oa" class="screen">
    <div class="tab-card">
       <div class="oa-title">1구좌 노출 분석</div>
-      <div class="oa-row">
-        <span class="oa-label">월 광고료</span>
-        <input class="oa-input" id="oa_cost" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcOA()">
-        <span class="oa-unit">원</span>
-      </div>
-      <div class="oa-row">
-        <span class="oa-label">일 노출횟수</span>
-        <input class="oa-input" id="oa_daily" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcOA()">
-        <span class="oa-unit">회</span>
-      </div>
-      <div class="oa-row">
-        <span class="oa-label">1회 노출 단가</span>
-        <span class="oa-calc" id="oa_cpe">–</span>
-        <span class="oa-unit">원</span>
+      <div class="oa-rows">
+        <div class="oa-row">
+          <span class="oa-label">월 광고료</span>
+          <input class="oa-input" id="oa_cost" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcOA()">
+          <span class="oa-unit">원</span>
+        </div>
+        <div class="oa-row">
+          <span class="oa-label">일 노출횟수</span>
+          <input class="oa-input" id="oa_daily" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcOA()">
+          <span class="oa-unit">회</span>
+        </div>
+        <div class="oa-row">
+          <span class="oa-label">1회 노출 단가</span>
+          <span class="oa-calc" id="oa_cpe">–</span>
+          <span class="oa-unit">원</span>
+        </div>
       </div>
       <div class="oa-hint">1회 노출 단가 = 월 광고료 ÷ (일 노출횟수 × 30)</div>
    </div>
    <div class="tab-card">
       <div class="oa-title">재원 계산</div>
-      <div class="oa-row">
-        <span class="oa-label">구좌 운영</span>
-        <input class="oa-input" id="oa_slots" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcOA()">
-        <span class="oa-unit">구좌</span>
-      </div>
-      <div class="oa-row">
-        <span class="oa-label">월 판매재원</span>
-        <span class="oa-calc" id="oa_monthly">–</span>
-        <span class="oa-unit">원</span>
-      </div>
-      <div class="oa-row">
-        <span class="oa-label">연 판매재원</span>
-        <span class="oa-calc" id="oa_yearly">–</span>
-        <span class="oa-unit">원</span>
+      <div class="oa-rows">
+        <div class="oa-row">
+          <span class="oa-label">구좌 운영</span>
+          <input class="oa-input" id="oa_slots" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcOA()">
+          <span class="oa-unit">구좌</span>
+        </div>
+        <div class="oa-row">
+          <span class="oa-label">월 판매재원</span>
+          <span class="oa-calc" id="oa_monthly">–</span>
+          <span class="oa-unit">원</span>
+        </div>
+        <div class="oa-row">
+          <span class="oa-label">연 판매재원</span>
+          <span class="oa-calc" id="oa_yearly">–</span>
+          <span class="oa-unit">원</span>
+        </div>
       </div>
       <div class="oa-hint">월 판매재원 = 월 광고료 × 구좌 운영</div>
    </div>
