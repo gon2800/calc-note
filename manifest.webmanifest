@@ -1,10 +1,10 @@
 {
-  "name": "계산 노트",
-  "short_name": "계산 노트",
+  "name": "My Calculator",
+  "short_name": "My Calculator",
   "description": "계산기 · 환율 · 단위 · 나이 · 옥외광고 계산기",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#5B56C8",
+  "background_color": "#F3E8CD",
   "theme_color": "#5B56C8",
   "orientation": "portrait",
   "icons": [

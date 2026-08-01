@@ -3,23 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#5B56C8">
+<meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="계산 노트">
+<meta name="apple-mobile-web-app-title" content="My Calculator">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
-<title>계산 노트</title>
+<title>My Calculator</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;background:#4A46B0;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;display:flex;justify-content:center;align-items:flex-start;background:red;}
+html,body{height:100%;background:#fff;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;display:flex;justify-content:center;align-items:flex-start;background:#fff;}
 
 #app{
   width:100%;
   max-width:430px;
   min-height:100dvh;
-  background:#F0EFF9;
+  background:#fff;
   display:flex;
   flex-direction:column;
   position:relative;
@@ -27,38 +27,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 
 /* ── 헤더 ── */
 .app-header{
-  background:#5B56C8;
+  background:#fff;
   padding:env(safe-area-inset-top,14px) 16px 10px;
   padding-top:max(env(safe-area-inset-top),14px);
   display:flex;align-items:center;gap:10px;
   flex-shrink:0;
+  box-shadow:0 1px 0 rgba(0,0,0,0.05);
+  position:relative;z-index:2;
 }
 .header-icon{width:38px;height:38px;border-radius:9px;overflow:hidden;flex-shrink:0;}
 .header-icon img{width:100%;height:100%;object-fit:cover;}
-.header-title{font-size:18px;font-weight:500;color:#fff;}
+.header-title{font-size:20px;font-weight:700;color:#2D2A8A;letter-spacing:-0.3px;}
 
 /* ── 탭바 ── */
 .tab-bar{
   display:flex;
-  background:#4A46B0;
+  background:#fff;
   padding:0 2px;
   overflow-x:auto;
   flex-shrink:0;
+  border-bottom:1px solid #EEECF9;
 }
 .tab-bar::-webkit-scrollbar{display:none;}
 .tab-item{
   flex:1;min-width:54px;
   padding:13px 2px 12px;
   text-align:center;
-  font-size:12px;
-  font-weight:700;
-  color:rgba(255,255,255,0.6);
+  font-size:14px;
+  font-weight:800;
+  color:#A6A3C9;
   cursor:pointer;
   border-bottom:2px solid transparent;
   white-space:nowrap;
   user-select:none;
 }
-.tab-item.active{color:#fff;border-bottom:2px solid #fff;}
+.tab-item.active{color:#4B47B8;border-bottom:2px solid #4B47B8;}
 .tab-item .ti{display:block;font-size:20px;margin-bottom:4px;}
 
 /* ── 스크린 ── */
@@ -97,6 +100,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   line-height:1.3;margin-top:4px;
 }
 /* 버튼 그리드 */
+.calc-top-row{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:7px;}
 .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
 .btn{
   height:66px;border-radius:13px;border:2px solid transparent;
@@ -111,22 +115,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 .btn-clear{background:#FDDCDC;border:2px solid #F5AAAA;color:#991A1A;font-size:22px;font-weight:600;}
 .btn-paren{background:#E8F0FE;border:2px solid #B0C4F8;color:#1A4FA8;font-size:22px;}
 .btn-pct{background:#D8D5F5;border:2px solid #A9A6E0;color:#2D2A8A;font-size:24px;}
+.btn-back{background:#F3F1FB;border:2px solid #C9C6EE;color:#4B47B8;font-size:20px;}
 .btn-zero{grid-column:span 2;}
 
 /* ══════════════════════════════
    환율
 ══════════════════════════════ */
-.rate-status{
-  font-size:12px;padding:8px 12px;
-  background:#EEEDFE;border-radius:8px;
-  color:#3C3489;margin-bottom:10px;
-  display:flex;align-items:center;gap:6px;
-}
-.rate-card{
-  background:#fff;border-radius:12px;
+.rate-box{
+  background:#fff;border-radius:14px;
   border:1.5px solid #C0BDED;
-  padding:14px;margin-bottom:10px;
+  padding:14px;margin-bottom:28px;
 }
+.rate-group{padding:4px 0;}
 .rate-label{font-size:12px;color:#888;margin-bottom:6px;}
 .rate-row{display:flex;gap:8px;align-items:center;overflow:hidden;}
 .rate-select{
@@ -159,9 +159,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 /* ══════════════════════════════
    단위
 ══════════════════════════════ */
-.unit-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.unit-tabs{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;}
 .unit-tab{
-  padding:6px 12px;border-radius:20px;font-size:12px;
+  padding:6px 12px;border-radius:8px;font-size:12px;
   border:1.5px solid #C0BDED;background:#fff;
   cursor:pointer;color:#666;
 }
@@ -267,9 +267,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   <!-- 헤더 -->
   <div class="app-header">
     <div class="header-icon">
-      <img src="/icons/icon-192.png" alt="계산 노트">
+      <img src="/icons/icon-192.png" alt="My Calculator">
     </div>
-    <span class="header-title">계산 노트</span>
+    <span class="header-title">My Calculator</span>
   </div>
 
   <!-- 탭바 -->
@@ -299,11 +299,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
       <div class="calc-expr-row" id="calcExpr">0</div>
       <div class="calc-result-row" id="calcPreview"></div>
     </div>
-    <div class="calc-grid">
+    <div class="calc-top-row">
       <button class="btn btn-clear"  onclick="ci('C')">C</button>
       <button class="btn btn-paren"  onclick="ci('()')">( )</button>
       <button class="btn btn-pct"    onclick="ci('%')">%</button>
       <button class="btn btn-op"     onclick="ci('÷')">÷</button>
+      <button class="btn btn-back"   onclick="ci('⌫')">⌫</button>
+    </div>
+    <div class="calc-grid">
       <button class="btn btn-num"    onclick="ci('7')">7</button>
       <button class="btn btn-num"    onclick="ci('8')">8</button>
       <button class="btn btn-num"    onclick="ci('9')">9</button>
@@ -324,62 +327,56 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 
   <!-- ═══ 환율 ═══ -->
   <div id="screen-fx" class="screen">
-    <div class="rate-status">
-      <i class="ti ti-refresh"></i>
-      <span id="fxStatusText">환율 불러오는 중...</span>
-    </div>
-    <div class="rate-card">
-      <div class="rate-label">변환 전</div>
-      <div class="rate-row">
-        <select class="rate-select" id="fromCur" onchange="convertFX()">
-          <option value="KRW">🇰🇷 KRW 원</option>
-          <option value="USD">🇺🇸 USD 달러</option>
-          <option value="CNY">🇨🇳 CNY 위안</option>
-          <option value="JPY">🇯🇵 JPY 엔</option>
-          <option value="EUR">🇪🇺 EUR 유로</option>
-          <option value="CAD">🇨🇦 CAD 달러</option>
-          <option value="AUD">🇦🇺 AUD 달러</option>
-          <option value="PEN">🇵🇪 PEN 솔</option>
-        </select>
-        <input class="rate-input" id="fromVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX()">
+    <div class="rate-box">
+      <div class="rate-group">
+        <div class="rate-label">변환 전</div>
+        <div class="rate-row">
+          <select class="rate-select" id="fromCur" onchange="convertFX()">
+            <option value="KRW">🇰🇷 KRW 원</option>
+            <option value="USD">🇺🇸 USD 달러</option>
+            <option value="CNY">🇨🇳 CNY 위안</option>
+            <option value="JPY">🇯🇵 JPY 엔</option>
+            <option value="EUR">🇪🇺 EUR 유로</option>
+            <option value="CAD">🇨🇦 CAD 달러</option>
+            <option value="AUD">🇦🇺 AUD 달러</option>
+            <option value="PEN">🇵🇪 PEN 솔</option>
+          </select>
+          <input class="rate-input" id="fromVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX()">
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <button class="rate-swap" onclick="swapFX()">
+          <i class="ti ti-arrows-up-down"></i>
+        </button>
+      </div>
+      <div class="rate-group">
+        <div class="rate-label">변환 후</div>
+        <div class="rate-row">
+          <select class="rate-select" id="toCur" onchange="convertFX()">
+            <option value="USD">🇺🇸 USD 달러</option>
+            <option value="KRW">🇰🇷 KRW 원</option>
+            <option value="CNY">🇨🇳 CNY 위안</option>
+            <option value="JPY">🇯🇵 JPY 엔</option>
+            <option value="EUR">🇪🇺 EUR 유로</option>
+            <option value="CAD">🇨🇦 CAD 달러</option>
+            <option value="AUD">🇦🇺 AUD 달러</option>
+            <option value="PEN">🇵🇪 PEN 솔</option>
+          </select>
+          <input class="rate-input" id="toVal" type="text" readonly
+            style="background:#F8F7FF;border-color:#C0BDED;">
+        </div>
+        <div class="rate-info" id="rateInfo"></div>
       </div>
     </div>
-    <div style="text-align:center;margin:-4px 0;position:relative;z-index:1;">
-      <button class="rate-swap" onclick="swapFX()">
-        <i class="ti ti-arrows-up-down"></i>
-      </button>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+      <span style="font-size:12px;color:#888;font-weight:500;">주요 통화 (KRW 기준)</span>
+      <span style="font-size:11px;color:#AAA;" id="fxStatusText">환율 불러오는 중...</span>
     </div>
-    <div class="rate-card" style="margin-top:-4px;">
-      <div class="rate-label">변환 후</div>
-      <div class="rate-row">
-        <select class="rate-select" id="toCur" onchange="convertFX()">
-          <option value="USD">🇺🇸 USD 달러</option>
-          <option value="KRW">🇰🇷 KRW 원</option>
-          <option value="CNY">🇨🇳 CNY 위안</option>
-          <option value="JPY">🇯🇵 JPY 엔</option>
-          <option value="EUR">🇪🇺 EUR 유로</option>
-          <option value="CAD">🇨🇦 CAD 달러</option>
-          <option value="AUD">🇦🇺 AUD 달러</option>
-          <option value="PEN">🇵🇪 PEN 솔</option>
-        </select>
-        <input class="rate-input" id="toVal" type="text" readonly
-          style="background:#F8F7FF;border-color:#C0BDED;">
-      </div>
-      <div class="rate-info" id="rateInfo"></div>
-    </div>
-    <div style="font-size:12px;color:#888;margin-bottom:8px;font-weight:500;">주요 통화 (KRW 기준)</div>
     <div class="quick-grid" id="quickGrid"></div>
   </div>
 
   <!-- ═══ 단위 ═══ -->
   <div id="screen-unit" class="screen">
-    <div class="unit-tabs">
-      <div class="unit-tab active" onclick="switchUnit('length',this)">길이</div>
-      <div class="unit-tab" onclick="switchUnit('weight',this)">무게</div>
-      <div class="unit-tab" onclick="switchUnit('area',this)">넓이</div>
-      <div class="unit-tab" onclick="switchUnit('temp',this)">온도</div>
-      <div class="unit-tab" onclick="switchUnit('speed',this)">속도</div>
-    </div>
     <div class="unit-card">
       <div class="unit-row">
         <select class="unit-select" id="fromUnit" onchange="convertUnit()"></select>
@@ -392,6 +389,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
         <input class="unit-val" id="toUnitVal" type="number" readonly
           style="background:#F8F7FF;">
       </div>
+    </div>
+    <div class="unit-tabs">
+      <div class="unit-tab active" onclick="switchUnit('length',this)">길이</div>
+      <div class="unit-tab" onclick="switchUnit('weight',this)">무게</div>
+      <div class="unit-tab" onclick="switchUnit('area',this)">넓이</div>
+      <div class="unit-tab" onclick="switchUnit('temp',this)">온도</div>
+      <div class="unit-tab" onclick="switchUnit('speed',this)">속도</div>
     </div>
   </div>
 
@@ -458,16 +462,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
         <span class="oa-unit">구좌</span>
       </div>
       <div class="oa-row">
-        <span class="oa-label">월 판매재</span>
+        <span class="oa-label">월 판매재원</span>
         <span class="oa-calc" id="oa_monthly">–</span>
         <span class="oa-unit">원</span>
       </div>
       <div class="oa-row">
-        <span class="oa-label">연 판매재</span>
+        <span class="oa-label">연 판매재원</span>
         <span class="oa-calc" id="oa_yearly">–</span>
         <span class="oa-unit">원</span>
       </div>
-      <div class="oa-hint">월 판매재 = 월 광고료 × 구좌 운영</div>
+      <div class="oa-hint">월 판매재원 = 월 광고료 × 구좌 운영</div>
     </div>
   </div>
 
@@ -523,6 +527,20 @@ function ci(k) {
   if (navigator.vibrate) navigator.vibrate(10);
   if (k === 'C') {
     curExpr = ''; curDisp = '0'; lastRes = null; evaled = false; parenD = 0;
+  } else if (k === '⌫') {
+    if (evaled) {
+      curExpr = ''; curDisp = '0'; lastRes = null; evaled = false; parenD = 0;
+    } else {
+      let full = (curExpr || curDisp).slice(0, -1);
+      if (full === '') {
+        curExpr = ''; curDisp = '0'; parenD = 0;
+      } else {
+        curExpr = full;
+        const m = full.match(/(\d+\.?\d*|\.\d+)$/);
+        curDisp = m ? m[0] : full.slice(-1);
+        parenD = (full.match(/\(/g) || []).length - (full.match(/\)/g) || []).length;
+      }
+    }
   } else if (k === '()') {
     if (evaled) { curExpr = numFmt(lastRes); evaled = false; }
     const last = curExpr.slice(-1);
@@ -643,8 +661,7 @@ async function loadFX() {
     fxRates = d.rates;
     const dt = new Date(d.time_last_update_utc);
     document.getElementById('fxStatusText').textContent =
-      `${dt.getMonth()+1}월 ${dt.getDate()}일 ${dt.getHours()}시 기준 환율`;
-    document.querySelector('#screen-fx .rate-status i').className = 'ti ti-check';
+      `${dt.getMonth()+1}월 ${dt.getDate()}일 ${dt.getHours()}시 기준`;
     convertFX();
     renderQuick();
   } catch(e) {
@@ -806,7 +823,10 @@ function getZodiac(year) {
 
 function ageInputMove(el, nextId, maxLen) {
   el.value = el.value.replace(/\D/g, '').slice(0, maxLen);
-  if (el.value.length === maxLen && nextId) {
+  const v = el.value;
+  const isMonthField = nextId === 'birthDay';
+  const earlyMove = isMonthField && v.length === 1 && parseInt(v, 10) >= 2;
+  if ((v.length === maxLen || earlyMove) && nextId) {
     document.getElementById(nextId).focus();
   }
   calcAge();
