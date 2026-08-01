@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#5B56C8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="계산 노트">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<title>계산 노트</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:#4A46B0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;display:flex;justify-content:center;align-items:flex-start;}
+
+#app{
+  width:100%;
+  max-width:430px;
+  min-height:100dvh;
+  background:#F0EFF9;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+
+/* ── 헤더 ── */
+.app-header{
+  background:#5B56C8;
+  padding:env(safe-area-inset-top,14px) 16px 10px;
+  padding-top:max(env(safe-area-inset-top),14px);
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;
+}
+.header-icon{width:38px;height:38px;border-radius:9px;overflow:hidden;flex-shrink:0;}
+.header-icon img{width:100%;height:100%;object-fit:cover;}
+.header-title{font-size:18px;font-weight:500;color:#fff;}
+
+/* ── 탭바 ── */
+.tab-bar{
+  display:flex;
+  background:#4A46B0;
+  padding:0 2px;
+  overflow-x:auto;
+  flex-shrink:0;
+}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab-item{
+  flex:1;min-width:54px;
+  padding:9px 2px;
+  text-align:center;
+  font-size:10px;
+  color:rgba(255,255,255,0.6);
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+  user-select:none;
+}
+.tab-item.active{color:#fff;border-bottom:2px solid #fff;font-weight:500;}
+.tab-item .ti{display:block;font-size:17px;margin-bottom:2px;}
+
+/* ── 스크린 ── */
+.screen{display:none;padding:10px;overflow-y:auto;flex:1;}
+.screen.active{display:block;}
+
+/* ══════════════════════════════
+   계산기
+══════════════════════════════ */
+.calc-display{
+  background:#fff;
+  border-radius:14px;
+  border:1.5px solid #C0BDED;
+  padding:14px 18px 10px;
+  margin-bottom:10px;
+  min-height:168px;
+  display:flex;flex-direction:column;
+}
+.calc-history{overflow-y:auto;max-height:64px;margin-bottom:4px;}
+.history-line{
+  font-size:12px;color:#BBB;
+  text-align:right;line-height:1.7;
+  cursor:pointer;padding:1px 0;
+}
+.history-line:hover{color:#4B47B8;}
+.history-sep{border:none;border-top:1px solid #E8E6F8;margin:4px 0;}
+.calc-expr-row{
+  font-size:28px;font-weight:400;color:#2D2A8A;
+  text-align:right;min-height:36px;
+  word-break:break-all;line-height:1.2;
+}
+.calc-expr-row .op{color:#5B56C8;font-weight:500;}
+.calc-result-row{
+  font-size:20px;font-weight:400;color:#AAA8CC;
+  text-align:right;word-break:break-all;
+  line-height:1.3;margin-top:4px;
+}
+.calc-hint{font-size:11px;color:#8B87CC;text-align:right;margin-top:4px;min-height:15px;}
+
+/* 버튼 그리드 */
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.btn{
+  height:66px;border-radius:13px;border:2px solid transparent;
+  font-weight:500;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.08s;user-select:none;
+}
+.btn:active{transform:scale(0.94);}
+.btn-num{background:#fff;border:2px solid #C0BDED;color:#1A1864;font-size:26px;}
+.btn-op{background:#D8D5F5;border:2px solid #A9A6E0;color:#2D2A8A;font-size:26px;}
+.btn-eq{background:#4B47B8;border:2px solid #3831A0;color:#fff;font-size:28px;}
+.btn-clear{background:#FDDCDC;border:2px solid #F5AAAA;color:#991A1A;font-size:22px;font-weight:600;}
+.btn-paren{background:#E8F0FE;border:2px solid #B0C4F8;color:#1A4FA8;font-size:22px;}
+.btn-pct{background:#D8D5F5;border:2px solid #A9A6E0;color:#2D2A8A;font-size:24px;}
+.btn-zero{grid-column:span 2;}
+
+/* ══════════════════════════════
+   환율
+══════════════════════════════ */
+.rate-status{
+  font-size:12px;padding:8px 12px;
+  background:#EEEDFE;border-radius:8px;
+  color:#3C3489;margin-bottom:10px;
+  display:flex;align-items:center;gap:6px;
+}
+.rate-card{
+  background:#fff;border-radius:12px;
+  border:1.5px solid #C0BDED;
+  padding:14px;margin-bottom:10px;
+}
+.rate-label{font-size:12px;color:#888;margin-bottom:6px;}
+.rate-row{display:flex;gap:8px;align-items:center;}
+.rate-select{
+  flex:1;height:40px;border-radius:8px;
+  border:1.5px solid #C0BDED;padding:0 8px;
+  font-size:13px;background:#F8F7FF;color:#1A1864;
+}
+.rate-input{
+  flex:1.5;height:40px;border-radius:8px;
+  border:2px solid #4B47B8;padding:0 10px;
+  font-size:18px;font-weight:500;
+  background:#fff;color:#1A1864;text-align:right;
+}
+.rate-swap{
+  width:36px;height:36px;border-radius:50%;
+  background:#EEEDFE;border:2px solid #A9A6E0;
+  cursor:pointer;display:flex;align-items:center;
+  justify-content:center;color:#5B56C8;font-size:16px;
+}
+.rate-info{font-size:11px;color:#AAA;text-align:right;margin-top:6px;}
+.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.quick-card{
+  background:#fff;border-radius:10px;
+  border:1.5px solid #C0BDED;
+  padding:10px 12px;cursor:pointer;
+}
+.quick-card:active{background:#EEEDFE;}
+
+/* ══════════════════════════════
+   단위
+══════════════════════════════ */
+.unit-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.unit-tab{
+  padding:6px 12px;border-radius:20px;font-size:12px;
+  border:1.5px solid #C0BDED;background:#fff;
+  cursor:pointer;color:#666;
+}
+.unit-tab.active{background:#5B56C8;color:#fff;border-color:#5B56C8;}
+.unit-card{
+  background:#fff;border-radius:12px;
+  border:1.5px solid #C0BDED;padding:16px;
+}
+.unit-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
+.unit-row:last-child{margin-bottom:0;}
+.unit-select{
+  width:130px;height:38px;border-radius:8px;
+  border:1.5px solid #C0BDED;padding:0 8px;
+  font-size:12px;background:#F8F7FF;color:#1A1864;
+}
+.unit-val{
+  flex:1;height:38px;border-radius:8px;
+  border:1.5px solid #C0BDED;padding:0 10px;
+  font-size:16px;background:#fff;color:#1A1864;text-align:right;
+}
+.unit-eq-text{font-size:11px;color:#AAA;text-align:center;padding:4px 0;}
+
+/* ══════════════════════════════
+   나이
+══════════════════════════════ */
+.age-card{
+  background:#fff;border-radius:12px;
+  border:1.5px solid #C0BDED;padding:16px;margin-bottom:12px;
+}
+.field-label{font-size:13px;color:#666;margin-bottom:8px;font-weight:500;}
+.date-input{
+  width:100%;height:42px;border-radius:8px;
+  border:1.5px solid #C0BDED;padding:0 12px;
+  font-size:16px;color:#1A1864;background:#fff;
+}
+.primary-btn{
+  width:100%;height:46px;border-radius:12px;
+  background:#5B56C8;color:#fff;border:none;
+  font-size:16px;font-weight:500;cursor:pointer;margin-top:10px;
+}
+.primary-btn:active{background:#4A46B0;}
+.age-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.age-result-card{
+  background:#F0EFF9;border-radius:10px;
+  border:1.5px solid #C0BDED;padding:12px;
+}
+.result-label{font-size:11px;color:#888;margin-bottom:4px;}
+.result-val{font-size:26px;font-weight:500;color:#4B47B8;}
+.result-sub{font-size:11px;color:#AAA;margin-top:2px;}
+.age-detail{
+  background:#EEEDFE;border-radius:10px;
+  padding:12px;margin-top:10px;
+}
+.detail-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:0.5px solid #D8D5F0;}
+.detail-row:last-child{border-bottom:none;}
+.detail-row .k{color:#888;}
+.detail-row .v{font-weight:500;color:#3C3489;}
+
+/* ══════════════════════════════
+   옥외광고
+══════════════════════════════ */
+.oa-section{
+  background:#fff;border-radius:12px;
+  border:1.5px solid #C0BDED;padding:14px;margin-bottom:10px;
+}
+.oa-title{
+  font-size:13px;font-weight:600;color:#3C3489;
+  margin-bottom:10px;padding-bottom:8px;
+  border-bottom:1.5px solid #E0DEF8;
+}
+.oa-row{
+  display:flex;align-items:center;
+  padding:8px 0;border-bottom:0.5px solid #F0EEF8;
+}
+.oa-row:last-child{border-bottom:none;}
+.oa-label{font-size:13px;color:#555;flex:1;}
+.oa-unit{font-size:12px;color:#AAA;width:30px;text-align:right;margin-left:4px;flex-shrink:0;}
+.oa-input{
+  width:130px;text-align:right;
+  background:#FFF9C4;border:1.5px solid #E0C040;
+  border-radius:7px;padding:5px 8px;
+  font-size:15px;color:#5A3A00;font-weight:500;
+}
+.oa-calc{
+  width:130px;text-align:right;
+  font-size:15px;font-weight:500;
+  color:#4B47B8;padding:5px 8px;
+}
+.oa-hint{font-size:11px;color:#AAA;margin-top:8px;text-align:right;line-height:1.6;}
+
+.hidden{display:none;}
+
+/* ── 아이콘 폰트 ── */
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css');
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- 헤더 -->
+  <div class="app-header">
+    <div class="header-icon">
+      <img src="/icons/icon-192.png" alt="계산 노트">
+    </div>
+    <span class="header-title">계산 노트</span>
+  </div>
+
+  <!-- 탭바 -->
+  <div class="tab-bar">
+    <div class="tab-item active" onclick="switchTab('calc')">
+      <i class="ti ti-calculator"></i>계산기
+    </div>
+    <div class="tab-item" onclick="switchTab('fx')">
+      <i class="ti ti-currency-dollar"></i>환율
+    </div>
+    <div class="tab-item" onclick="switchTab('unit')">
+      <i class="ti ti-ruler"></i>단위
+    </div>
+    <div class="tab-item" onclick="switchTab('age')">
+      <i class="ti ti-cake"></i>나이
+    </div>
+    <div class="tab-item" onclick="switchTab('oa')">
+      <i class="ti ti-ad-2"></i>옥외광고
+    </div>
+  </div>
+
+  <!-- ═══ 계산기 ═══ -->
+  <div id="screen-calc" class="screen active">
+    <div class="calc-display">
+      <div class="calc-history" id="calcHistory"></div>
+      <hr class="history-sep" id="historySep" style="display:none">
+      <div class="calc-expr-row" id="calcExpr">0</div>
+      <div class="calc-result-row" id="calcPreview"></div>
+      <div class="calc-hint" id="calcHint"></div>
+    </div>
+    <div class="calc-grid">
+      <button class="btn btn-clear"  onclick="ci('C')">C</button>
+      <button class="btn btn-paren"  onclick="ci('()')">( )</button>
+      <button class="btn btn-pct"    onclick="ci('%')">%</button>
+      <button class="btn btn-op"     onclick="ci('÷')">÷</button>
+      <button class="btn btn-num"    onclick="ci('7')">7</button>
+      <button class="btn btn-num"    onclick="ci('8')">8</button>
+      <button class="btn btn-num"    onclick="ci('9')">9</button>
+      <button class="btn btn-op"     onclick="ci('×')">×</button>
+      <button class="btn btn-num"    onclick="ci('4')">4</button>
+      <button class="btn btn-num"    onclick="ci('5')">5</button>
+      <button class="btn btn-num"    onclick="ci('6')">6</button>
+      <button class="btn btn-op"     onclick="ci('−')">−</button>
+      <button class="btn btn-num"    onclick="ci('1')">1</button>
+      <button class="btn btn-num"    onclick="ci('2')">2</button>
+      <button class="btn btn-num"    onclick="ci('3')">3</button>
+      <button class="btn btn-op"     onclick="ci('+')">+</button>
+      <button class="btn btn-num btn-zero" onclick="ci('0')">0</button>
+      <button class="btn btn-num"    onclick="ci('.')">.</button>
+      <button class="btn btn-eq"     onclick="ci('=')">=</button>
+    </div>
+  </div>
+
+  <!-- ═══ 환율 ═══ -->
+  <div id="screen-fx" class="screen">
+    <div class="rate-status">
+      <i class="ti ti-refresh"></i>
+      <span id="fxStatusText">환율 불러오는 중...</span>
+    </div>
+    <div class="rate-card">
+      <div class="rate-label">변환 전</div>
+      <div class="rate-row">
+        <select class="rate-select" id="fromCur" onchange="convertFX()">
+          <option value="KRW">🇰🇷 KRW 원</option>
+          <option value="USD">🇺🇸 USD 달러</option>
+          <option value="CNY">🇨🇳 CNY 위안</option>
+          <option value="JPY">🇯🇵 JPY 엔</option>
+          <option value="EUR">🇪🇺 EUR 유로</option>
+          <option value="CAD">🇨🇦 CAD 달러</option>
+          <option value="AUD">🇦🇺 AUD 달러</option>
+          <option value="PEN">🇵🇪 PEN 솔</option>
+        </select>
+        <input class="rate-input" id="fromVal" type="number" value="10000" oninput="convertFX()">
+      </div>
+    </div>
+    <div style="text-align:center;margin:-4px 0;position:relative;z-index:1;">
+      <button class="rate-swap" onclick="swapFX()">
+        <i class="ti ti-arrows-up-down"></i>
+      </button>
+    </div>
+    <div class="rate-card" style="margin-top:-4px;">
+      <div class="rate-label">변환 후</div>
+      <div class="rate-row">
+        <select class="rate-select" id="toCur" onchange="convertFX()">
+          <option value="USD">🇺🇸 USD 달러</option>
+          <option value="KRW">🇰🇷 KRW 원</option>
+          <option value="CNY">🇨🇳 CNY 위안</option>
+          <option value="JPY">🇯🇵 JPY 엔</option>
+          <option value="EUR">🇪🇺 EUR 유로</option>
+          <option value="CAD">🇨🇦 CAD 달러</option>
+          <option value="AUD">🇦🇺 AUD 달러</option>
+          <option value="PEN">🇵🇪 PEN 솔</option>
+        </select>
+        <input class="rate-input" id="toVal" type="number" readonly
+          style="background:#F8F7FF;border-color:#C0BDED;">
+      </div>
+      <div class="rate-info" id="rateInfo"></div>
+    </div>
+    <div style="font-size:12px;color:#888;margin-bottom:8px;font-weight:500;">주요 통화 (KRW 기준)</div>
+    <div class="quick-grid" id="quickGrid"></div>
+  </div>
+
+  <!-- ═══ 단위 ═══ -->
+  <div id="screen-unit" class="screen">
+    <div class="unit-tabs">
+      <div class="unit-tab active" onclick="switchUnit('length',this)">길이</div>
+      <div class="unit-tab" onclick="switchUnit('weight',this)">무게</div>
+      <div class="unit-tab" onclick="switchUnit('area',this)">넓이</div>
+      <div class="unit-tab" onclick="switchUnit('temp',this)">온도</div>
+      <div class="unit-tab" onclick="switchUnit('speed',this)">속도</div>
+    </div>
+    <div class="unit-card">
+      <div class="unit-row">
+        <select class="unit-select" id="fromUnit" onchange="convertUnit()"></select>
+        <input class="unit-val" id="fromUnitVal" type="number" value="1"
+          oninput="convertUnit()" style="border-color:#5B56C8;">
+      </div>
+      <div class="unit-eq-text" id="unitEqText"></div>
+      <div class="unit-row">
+        <select class="unit-select" id="toUnit" onchange="convertUnit()"></select>
+        <input class="unit-val" id="toUnitVal" type="number" readonly
+          style="background:#F8F7FF;">
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 나이 ═══ -->
+  <div id="screen-age" class="screen">
+    <div class="age-card">
+      <div class="field-label">생년월일</div>
+      <input class="date-input" type="date" id="birthDate" onchange="calcAge()">
+      <button class="primary-btn" onclick="calcAge()">나이 계산</button>
+    </div>
+    <div id="ageResults" class="hidden">
+      <div class="age-results">
+        <div class="age-result-card">
+          <div class="result-label">세는 나이</div>
+          <div class="result-val" id="korAge">–</div>
+          <div class="result-sub">한국식</div>
+        </div>
+        <div class="age-result-card">
+          <div class="result-label">만 나이</div>
+          <div class="result-val" id="intAge">–</div>
+          <div class="result-sub">국제 기준</div>
+        </div>
+      </div>
+      <div class="age-detail">
+        <div class="detail-row"><span class="k">생년월일</span><span class="v" id="ageBirth">–</span></div>
+        <div class="detail-row"><span class="k">오늘</span><span class="v" id="ageToday">–</span></div>
+        <div class="detail-row"><span class="k">태어난 지</span><span class="v" id="ageDays">–</span></div>
+        <div class="detail-row"><span class="k">다음 생일까지</span><span class="v" id="ageNextBday">–</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 옥외광고 ═══ -->
+  <div id="screen-oa" class="screen">
+    <div class="oa-section">
+      <div class="oa-title">1구좌 노출 분석</div>
+      <div class="oa-row">
+        <span class="oa-label">월 광고료</span>
+        <input class="oa-input" id="oa_cost" type="number" placeholder="0" oninput="calcOA()">
+        <span class="oa-unit">원</span>
+      </div>
+      <div class="oa-row">
+        <span class="oa-label">일 노출횟수</span>
+        <input class="oa-input" id="oa_daily" type="number" placeholder="0" oninput="calcOA()">
+        <span class="oa-unit">회</span>
+      </div>
+      <div class="oa-row">
+        <span class="oa-label">1회 노출 단가</span>
+        <span class="oa-calc" id="oa_cpe">–</span>
+        <span class="oa-unit">원</span>
+      </div>
+      <div class="oa-hint">1회 노출 단가 = 월 광고료 ÷ (일 노출횟수 × 30)</div>
+    </div>
+    <div class="oa-section">
+      <div class="oa-title">재원 계산</div>
+      <div class="oa-row">
+        <span class="oa-label">구좌 운영</span>
+        <input class="oa-input" id="oa_slots" type="number" placeholder="0" oninput="calcOA()">
+        <span class="oa-unit">구좌</span>
+      </div>
+      <div class="oa-row">
+        <span class="oa-label">월 판매재</span>
+        <span class="oa-calc" id="oa_monthly">–</span>
+        <span class="oa-unit">원</span>
+      </div>
+      <div class="oa-row">
+        <span class="oa-label">연 판매재</span>
+        <span class="oa-calc" id="oa_yearly">–</span>
+        <span class="oa-unit">원</span>
+      </div>
+      <div class="oa-hint">월 판매재 = 월 광고료 × 구좌 운영</div>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<script>
+'use strict';
+
+/* ══════════════════════════════
+   탭 전환
+══════════════════════════════ */
+const TABS = ['calc','fx','unit','age','oa'];
+function switchTab(t) {
+  document.querySelectorAll('.tab-item').forEach((el,i) =>
+    el.classList.toggle('active', TABS[i] === t));
+  document.querySelectorAll('.screen').forEach(el =>
+    el.classList.remove('active'));
+  document.getElementById('screen-' + t).classList.add('active');
+}
+
+/* ══════════════════════════════
+   계산기
+══════════════════════════════ */
+const OPS = ['÷','×','−','+'];
+let calcHist = [];
+let curExpr   = '';
+let curDisp   = '0';
+let lastRes   = null;
+let evaled    = false;
+let parenD    = 0;
+
+function numFmt(n) {
+  if (typeof n !== 'number' || isNaN(n)) return String(n);
+  const s = parseFloat(n.toPrecision(12)).toString();
+  const [int, dec] = s.split('.');
+  const fmtInt = int.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return dec !== undefined ? fmtInt + '.' + dec : fmtInt;
+}
+
+function colorExpr(s) {
+  return s.replace(/([÷×−+])/g, '<span class="op">$1</span>');
+}
+
+function tryEval(expr) {
+  try {
+    const e = expr.replace(/,/g,'').replace(/÷/g,'/').replace(/×/g,'*').replace(/−/g,'-');
+    const r = Function('"use strict";return(' + e + ')')();
+    return (typeof r === 'number' && isFinite(r)) ? r : null;
+  } catch { return null; }
+}
+
+function ci(k) {
+  if (k === 'C') {
+    curExpr = ''; curDisp = '0'; lastRes = null; evaled = false; parenD = 0;
+  } else if (k === '()') {
+    if (evaled) { curExpr = numFmt(lastRes); evaled = false; }
+    const last = curExpr.slice(-1);
+    if (parenD === 0 || OPS.includes(last) || last === '(') {
+      curExpr += '('; parenD++; curDisp = '(';
+    } else {
+      curExpr += ')'; parenD = Math.max(0, parenD - 1); curDisp = ')';
+    }
+  } else if (k === '%') {
+    const v = parseFloat(curDisp.replace(/,/g,''));
+    if (!isNaN(v)) {
+      const r = v / 100;
+      curDisp = numFmt(r);
+      if (evaled) lastRes = r;
+      const li = Math.max(...OPS.map(o => curExpr.lastIndexOf(o)));
+      curExpr = li >= 0 ? curExpr.slice(0, li+1) + numFmt(r) : numFmt(r);
+    }
+  } else if (k === '=') {
+    const full = curExpr || curDisp;
+    const r = tryEval(full);
+    if (r !== null) {
+      calcHist.push({ expr: curExpr || curDisp, result: numFmt(r) });
+      if (calcHist.length > 5) calcHist.shift();
+      curExpr = ''; lastRes = r; curDisp = numFmt(r); evaled = true; parenD = 0;
+    } else {
+      curDisp = '오류';
+    }
+  } else if (OPS.includes(k)) {
+    if (evaled) { curExpr = numFmt(lastRes) + k; curDisp = k; evaled = false; }
+    else {
+      const last = curExpr.slice(-1);
+      if (OPS.includes(last)) curExpr = curExpr.slice(0,-1) + k;
+      else curExpr = (curExpr || curDisp) + k;
+      curDisp = k;
+    }
+  } else {
+    if (evaled) { curExpr = ''; curDisp = '0'; lastRes = null; evaled = false; }
+    if (k === '.' && curDisp.includes('.')) { /* skip */ }
+    else if (k === '.' && (curDisp === '' || OPS.includes(curDisp) || curDisp === '(')) {
+      curDisp = '0.';
+    } else if ((curDisp === '0' || OPS.includes(curDisp) || curDisp === '(') && k !== '.') {
+      curDisp = k;
+    } else {
+      curDisp += k;
+    }
+    const li = Math.max(...OPS.map(o => curExpr.lastIndexOf(o)),
+                        curExpr.lastIndexOf('('));
+    curExpr = li >= 0 ? curExpr.slice(0, li+1) + curDisp : curDisp;
+  }
+  renderCalc();
+}
+
+function renderCalc() {
+  // 히스토리
+  const hEl = document.getElementById('calcHistory');
+  const sep  = document.getElementById('historySep');
+  if (calcHist.length > 0) {
+    hEl.innerHTML = calcHist.map((h,i) =>
+      `<div class="history-line" onclick="useHist(${i})">${h.expr} = ${h.result}</div>`
+    ).join('');
+    sep.style.display = 'block';
+  } else { hEl.innerHTML = ''; sep.style.display = 'none'; }
+
+  // 수식 표시
+  document.getElementById('calcExpr').innerHTML =
+    colorExpr(evaled ? curDisp : (curExpr || '0'));
+
+  // 실시간 미리보기
+  let preview = '';
+  if (!evaled && curExpr && !OPS.includes(curExpr.slice(-1)) && curExpr !== curDisp) {
+    const r = tryEval(curExpr);
+    if (r !== null) preview = '= ' + numFmt(r);
+  }
+  document.getElementById('calcPreview').textContent = preview;
+  document.getElementById('calcHint').textContent =
+    evaled && lastRes !== null ? '연산자를 누르면 이어서 계산' : '';
+}
+
+function useHist(i) {
+  const h = calcHist[i];
+  lastRes = parseFloat(h.result.replace(/,/g,''));
+  curDisp = h.result; curExpr = ''; evaled = true;
+  renderCalc();
+}
+
+renderCalc();
+
+/* ══════════════════════════════
+   환율
+══════════════════════════════ */
+let fxRates = {};
+
+async function loadFX() {
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/KRW');
+    const d   = await res.json();
+    fxRates = d.rates;
+    const dt = new Date(d.time_last_update_utc);
+    document.getElementById('fxStatusText').textContent =
+      `${dt.getMonth()+1}/${dt.getDate()} ${dt.getHours()}시 기준 환율`;
+    document.querySelector('#screen-fx .rate-status i').className = 'ti ti-check';
+    convertFX();
+    renderQuick();
+  } catch(e) {
+    document.getElementById('fxStatusText').textContent = '환율 로드 실패 (오프라인 모드)';
+  }
+}
+
+function convertFX() {
+  if (!Object.keys(fxRates).length) return;
+  const from = document.getElementById('fromCur').value;
+  const to   = document.getElementById('toCur').value;
+  const val  = parseFloat(document.getElementById('fromVal').value) || 0;
+  const rate = (1 / fxRates[from]) * fxRates[to];
+  const result = val * rate;
+  document.getElementById('toVal').value =
+    result < 0.01 ? result.toFixed(6) : result.toFixed(2);
+  const r1 = rate < 0.01 ? rate.toFixed(6) : rate.toFixed(4);
+  document.getElementById('rateInfo').textContent = `1 ${from} = ${r1} ${to}`;
+}
+
+function swapFX() {
+  const f = document.getElementById('fromCur');
+  const t = document.getElementById('toCur');
+  [f.value, t.value] = [t.value, f.value];
+  convertFX();
+}
+
+function renderQuick() {
+  const pairs = [['USD','🇺🇸'],['JPY','🇯🇵'],['CNY','🇨🇳'],
+                 ['EUR','🇪🇺'],['CAD','🇨🇦'],['AUD','🇦🇺']];
+  document.getElementById('quickGrid').innerHTML = pairs.map(([c,f]) => `
+    <div class="quick-card" onclick="setQuick('${c}')">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:20px;">${f}</span>
+        <span style="font-size:13px;font-weight:500;color:#1A1864;">${c}</span>
+      </div>
+      <div style="font-size:12px;color:#888;margin-top:4px;">
+        ₩1000 = ${c==='JPY'
+          ? (1000*fxRates[c]).toFixed(1)
+          : (1000*fxRates[c]).toFixed(2)}
+      </div>
+    </div>`).join('');
+}
+
+function setQuick(c) {
+  document.getElementById('fromCur').value = 'KRW';
+  document.getElementById('toCur').value   = c;
+  document.getElementById('fromVal').value = 10000;
+  convertFX();
+}
+
+loadFX();
+
+/* ══════════════════════════════
+   단위 변환
+══════════════════════════════ */
+const UNITS = {
+  length: { units: [
+    {k:'m',  label:'미터 (m)',       base:1},
+    {k:'km', label:'킬로미터 (km)', base:1000},
+    {k:'cm', label:'센티미터 (cm)', base:0.01},
+    {k:'mm', label:'밀리미터 (mm)', base:0.001},
+    {k:'mi', label:'마일 (mi)',      base:1609.344},
+    {k:'yd', label:'야드 (yd)',      base:0.9144},
+    {k:'ft', label:'피트 (ft)',      base:0.3048},
+    {k:'in', label:'인치 (in)',      base:0.0254},
+    {k:'nm', label:'해리 (nm)',      base:1852},
+  ]},
+  weight: { units: [
+    {k:'kg',  label:'킬로그램 (kg)', base:1},
+    {k:'g',   label:'그램 (g)',      base:0.001},
+    {k:'lb',  label:'파운드 (lb)',   base:0.453592},
+    {k:'oz',  label:'온스 (oz)',     base:0.0283495},
+    {k:'t',   label:'톤 (t)',        base:1000},
+    {k:'jin', label:'근 (斤)',       base:0.6},
+  ]},
+  area: { units: [
+    {k:'m2',   label:'제곱미터 (m²)',   base:1},
+    {k:'km2',  label:'제곱킬로미터',    base:1e6},
+    {k:'cm2',  label:'제곱센티미터',    base:0.0001},
+    {k:'ha',   label:'헥타르 (ha)',     base:10000},
+    {k:'py',   label:'평 (坪)',         base:3.30579},
+    {k:'acre', label:'에이커 (acre)',   base:4046.86},
+    {k:'ft2',  label:'제곱피트 (ft²)', base:0.0929},
+  ]},
+  temp: { units: [
+    {k:'C', label:'섭씨 (°C)', base:null},
+    {k:'F', label:'화씨 (°F)', base:null},
+    {k:'K', label:'켈빈 (K)',  base:null},
+  ]},
+  speed: { units: [
+    {k:'mps', label:'m/s',       base:1},
+    {k:'kph', label:'km/h',      base:1/3.6},
+    {k:'mph', label:'mph',       base:0.44704},
+    {k:'kt',  label:'노트 (kt)', base:0.514444},
+  ]}
+};
+
+let curUnitType = 'length';
+
+function switchUnit(type, el) {
+  curUnitType = type;
+  document.querySelectorAll('.unit-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  loadUnitSelects();
+}
+
+function loadUnitSelects() {
+  const def  = UNITS[curUnitType];
+  const opts = def.units.map(u => `<option value="${u.k}">${u.label}</option>`).join('');
+  document.getElementById('fromUnit').innerHTML = opts;
+  document.getElementById('toUnit').innerHTML   = opts;
+  document.getElementById('toUnit').selectedIndex = 1;
+  document.getElementById('fromUnitVal').value = 1;
+  convertUnit();
+}
+
+function convertUnit() {
+  const from = document.getElementById('fromUnit').value;
+  const to   = document.getElementById('toUnit').value;
+  const val  = parseFloat(document.getElementById('fromUnitVal').value) || 0;
+  const def  = UNITS[curUnitType];
+  let result;
+  if (curUnitType === 'temp') {
+    let c = from==='C' ? val : from==='F' ? (val-32)*5/9 : val-273.15;
+    result = to==='C' ? c : to==='F' ? c*9/5+32 : c+273.15;
+  } else {
+    const fu = def.units.find(u => u.k === from);
+    const tu = def.units.find(u => u.k === to);
+    result = val * fu.base / tu.base;
+  }
+  const disp = Math.abs(result) >= 0.0001 || result === 0
+    ? parseFloat(result.toPrecision(8)).toString()
+    : result.toExponential(4);
+  document.getElementById('toUnitVal').value = disp;
+  if (curUnitType !== 'temp') {
+    const fu = UNITS[curUnitType].units.find(u => u.k === from);
+    const tu = UNITS[curUnitType].units.find(u => u.k === to);
+    const r  = parseFloat((fu.base / tu.base).toPrecision(6));
+    document.getElementById('unitEqText').textContent = `1 ${from} = ${r} ${to}`;
+  } else {
+    document.getElementById('unitEqText').textContent = '';
+  }
+}
+
+loadUnitSelects();
+
+/* ══════════════════════════════
+   나이 계산
+══════════════════════════════ */
+function calcAge() {
+  const birth = document.getElementById('birthDate').value;
+  if (!birth) return;
+  const b  = new Date(birth), t = new Date();
+  const by = b.getFullYear(), bm = b.getMonth(), bd = b.getDate();
+  const ty = t.getFullYear(), tm = t.getMonth(), td = t.getDate();
+  const intAge = ty - by - (tm < bm || (tm === bm && td < bd) ? 1 : 0);
+  const korAge = ty - by + 1;
+  const diffDays = Math.floor((t - b) / 86400000);
+  const nextBday = new Date(ty, bm, bd);
+  if (nextBday <= t) nextBday.setFullYear(ty + 1);
+  const daysLeft = Math.ceil((nextBday - t) / 86400000);
+  document.getElementById('korAge').textContent    = korAge + '세';
+  document.getElementById('intAge').textContent    = intAge + '세';
+  document.getElementById('ageBirth').textContent  = `${by}.${String(bm+1).padStart(2,'0')}.${String(bd).padStart(2,'0')}`;
+  document.getElementById('ageToday').textContent  = `${ty}.${String(tm+1).padStart(2,'0')}.${String(td).padStart(2,'0')}`;
+  document.getElementById('ageDays').textContent   = diffDays.toLocaleString() + '일';
+  document.getElementById('ageNextBday').textContent = daysLeft + '일';
+  document.getElementById('ageResults').classList.remove('hidden');
+}
+
+/* ══════════════════════════════
+   옥외광고
+══════════════════════════════ */
+function calcOA() {
+  const cost  = parseFloat(document.getElementById('oa_cost').value)  || 0;
+  const daily = parseFloat(document.getElementById('oa_daily').value) || 0;
+  const slots = parseFloat(document.getElementById('oa_slots').value) || 0;
+  const cpe         = daily > 0 ? cost / (daily * 30) : 0;
+  const monthlyRev  = cost * slots;
+  const yearlyRev   = monthlyRev * 12;
+  const fmt = v => v > 0 ? v.toLocaleString('ko-KR', {maximumFractionDigits:1}) : '–';
+  document.getElementById('oa_cpe').textContent     = daily > 0 ? fmt(cpe) : '–';
+  document.getElementById('oa_monthly').textContent = slots > 0 && cost > 0 ? monthlyRev.toLocaleString('ko-KR') : '–';
+  document.getElementById('oa_yearly').textContent  = slots > 0 && cost > 0 ? yearlyRev.toLocaleString('ko-KR')  : '–';
+}
+
+/* ══════════════════════════════
+   PWA 서비스 워커 등록
+══════════════════════════════ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(console.error);
+  });
+}
+</script>
+</body>
+</html>
