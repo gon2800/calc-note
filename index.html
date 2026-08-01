@@ -170,15 +170,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
   background:#fff;border-radius:12px;
   border:1.5px solid #C0BDED;padding:16px;
 }
-.unit-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;}
+.unit-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;overflow:hidden;}
 .unit-row:last-child{margin-bottom:0;}
 .unit-select{
-  width:130px;height:38px;border-radius:8px;
+  width:130px;height:38px;border-radius:8px;flex-shrink:0;
   border:1.5px solid #C0BDED;padding:0 8px;
   font-size:12px;background:#F8F7FF;color:#1A1864;
 }
 .unit-val{
-  flex:1;height:38px;border-radius:8px;
+  flex:1;min-width:0;height:38px;border-radius:8px;
   border:1.5px solid #C0BDED;padding:0 10px;
   font-size:16px;background:#fff;color:#1A1864;text-align:right;
 }
