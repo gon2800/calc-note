@@ -13,11 +13,12 @@
 <style>
 :root{
   --bg:#F5F6FB; --card:#FFFFFF; --ink:#1F2437; --sub:#7A809A;
-  --line:#EBEDF4; --accent:#5B54E8; --accent-dark:#4C46D6; --accent-soft:#EEEDFD;
+  --line:#EBEDF4; --line-strong:#D3D8E6; --accent:#5B54E8; --accent-dark:#4C46D6; --accent-soft:#EEEDFD;
   --danger:#EF6C6C; --danger-soft:#FDECEC;
   --shadow:0 1px 2px rgba(31,36,55,.04),0 8px 24px rgba(31,36,55,.06);
   --radius:18px;
 }
+.divider{border:none;border-top:2px solid var(--line-strong);margin:16px 0;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:var(--bg);}
 body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;display:flex;justify-content:center;align-items:flex-start;background:var(--bg);color:var(--ink);}
@@ -47,7 +48,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 /* ── 탭바 (견출지 스타일: 활성 탭이 카드와 이어짐) ── */
 .tab-bar{
   display:flex;
-  gap:4px;
+  gap:0;
   background:transparent;
   padding:0 10px;
   overflow-x:auto;
@@ -55,6 +56,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 }
 .tab-bar::-webkit-scrollbar{display:none;}
 .tab-item{
+  position:relative;
   flex:1;min-width:54px;
   padding:10px 2px 9px;
   text-align:center;
@@ -68,12 +70,27 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   user-select:none;
 }
 .tab-item.active{background:var(--card);color:var(--accent);font-weight:800;}
+.tab-item.active::before,
+.tab-item.active::after{
+  content:"";
+  position:absolute;
+  bottom:0;
+  width:8px;height:8px;
+  pointer-events:none;
+}
+.tab-item.active::before{left:-8px;background:radial-gradient(circle at top left, transparent 8px, var(--card) 8px);}
+.tab-item.active::after{right:-8px;background:radial-gradient(circle at top right, transparent 8px, var(--card) 8px);}
+.tab-item:first-child.active::before{content:none;}
+.tab-item:last-child.active::after{content:none;}
+.tab-item:first-child.active{border-top-left-radius:var(--radius);}
+.tab-item:last-child.active{border-top-right-radius:var(--radius);}
 .tab-item .ti{display:block;font-size:19px;margin-bottom:3px;}
 
 /* ── 스크린 / 탭 카드 ── */
 .screen{display:none;padding:0 10px 10px;overflow-y:auto;flex:1;}
 .screen.active{display:block;}
 .tab-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;}
+.tab-card + .tab-card{margin-top:12px;}
 
 /* ══════════════════════════════
    계산기
@@ -82,7 +99,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   background:transparent;
   padding:0 0 14px;
   margin-bottom:14px;
-  border-bottom:1px solid var(--line);
+  border-bottom:2px solid var(--line-strong);
   min-height:140px;
   display:flex;flex-direction:column;
 }
@@ -93,7 +110,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   cursor:pointer;padding:1px 0;
 }
 .history-line:hover{color:var(--accent);}
-.history-sep{border:none;border-top:1px solid var(--line);margin:4px 0;}
+.history-sep{margin:4px 0;}
 .calc-expr-row{
   font-size:28px;font-weight:400;color:var(--ink);
   text-align:right;min-height:36px;
@@ -106,7 +123,8 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   line-height:1.3;margin-top:4px;
 }
 /* 버튼 그리드 */
-.calc-top-row{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:7px;}
+.calc-back-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:7px;}
+.calc-back-row .btn-back{grid-column:4;}
 .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
 .btn{
   height:64px;border-radius:14px;border:none;
@@ -119,22 +137,17 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .btn-op{background:var(--accent-soft);color:var(--accent);font-size:24px;font-weight:700;}
 .btn-eq{background:var(--accent);color:#fff;font-size:26px;}
 .btn-clear{background:var(--danger-soft);color:var(--danger);font-size:20px;font-weight:700;}
-.btn-paren{background:var(--bg);color:var(--sub);font-size:20px;font-weight:700;}
-.btn-pct{background:var(--accent-soft);color:var(--accent);font-size:22px;font-weight:700;}
 .btn-back{background:var(--bg);color:var(--sub);font-size:18px;}
-.btn-zero{grid-column:span 2;}
 
 /* ══════════════════════════════
    환율
 ══════════════════════════════ */
-.rate-divider{border:none;border-top:1px solid var(--line);margin:16px 0;}
 .rate-group{padding:4px 0;}
-.rate-label{font-size:12px;color:var(--sub);margin-bottom:6px;}
 .rate-row{display:flex;gap:8px;align-items:center;overflow:hidden;}
 .rate-select{
   flex:1;min-width:0;height:40px;border-radius:10px;
-  border:1.5px solid var(--line);padding:0 8px;
-  font-size:13px;background:var(--bg);color:var(--ink);
+  border:1.5px solid var(--line);padding:0 10px 0 8px;
+  font-size:13px;background:var(--bg);color:var(--ink);text-align:right;
 }
 .rate-input{
   flex:1.5;min-width:0;width:0;height:40px;border-radius:10px;
@@ -160,7 +173,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 /* ══════════════════════════════
    단위
 ══════════════════════════════ */
-.unit-tabs{display:flex;gap:4px;background:var(--bg);border-radius:12px;padding:4px;margin-top:14px;}
+.unit-tabs{display:flex;gap:4px;background:var(--bg);border-radius:12px;padding:4px;margin-top:0;}
 .unit-tab{
   flex:1;text-align:center;
   padding:8px 4px;border-radius:9px;font-size:12px;font-weight:700;
@@ -168,12 +181,11 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   cursor:pointer;color:var(--sub);
 }
 .unit-tab.active{background:var(--card);color:var(--accent);box-shadow:var(--shadow);}
-.unit-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;overflow:hidden;}
-.unit-row:last-child{margin-bottom:0;}
+.unit-row{display:flex;gap:8px;align-items:center;overflow:hidden;}
 .unit-select{
   width:120px;height:38px;border-radius:10px;flex-shrink:0;
-  border:1.5px solid var(--line);padding:0 8px;
-  font-size:12px;background:var(--bg);color:var(--ink);
+  border:1.5px solid var(--line);padding:0 10px 0 8px;
+  font-size:12px;background:var(--bg);color:var(--ink);text-align:right;
 }
 .unit-val{
   flex:1;min-width:0;width:0;height:38px;border-radius:10px;
@@ -185,12 +197,11 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 /* ══════════════════════════════
    나이
 ══════════════════════════════ */
-.field-label{font-size:13px;color:var(--sub);margin-bottom:8px;font-weight:600;}
 .date-input-row{display:flex;gap:8px;}
 .date-input{
   flex:1;min-width:0;height:42px;border-radius:10px;
-  border:1.5px solid var(--line);padding:0 8px;
-  font-size:16px;color:var(--ink);background:var(--bg);
+  border:2px solid var(--accent);padding:0 8px;
+  font-size:16px;color:var(--ink);background:var(--card);
   text-align:center;
 }
 .date-input-year{flex:1.3;}
@@ -200,22 +211,30 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   font-size:16px;font-weight:700;cursor:pointer;margin-top:12px;
 }
 .primary-btn:active{background:var(--accent-dark);}
-.age-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}
+.age-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+#retireResults{margin-top:10px;}
 .age-result-card{
   background:var(--bg);border-radius:12px;
   padding:12px;
 }
 .result-label{font-size:11px;color:var(--sub);margin-bottom:4px;}
 .result-val{font-size:26px;font-weight:700;color:var(--accent);}
+.result-val.small{font-size:17px;}
 .result-sub{font-size:11px;color:var(--sub);margin-top:2px;}
 .age-detail{
   background:var(--bg);border-radius:12px;
   padding:12px;margin-top:10px;
 }
-.detail-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:1px solid var(--line);}
+.detail-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:2px solid var(--line-strong);}
 .detail-row:last-child{border-bottom:none;}
 .detail-row .k{color:var(--sub);}
 .detail-row .v{font-weight:600;color:var(--ink);}
+.more-btn{
+  display:block;width:100%;text-align:center;
+  background:none;border:none;color:var(--accent);
+  font-size:12px;font-weight:700;cursor:pointer;
+  padding:12px 0 0;
+}
 
 /* ══════════════════════════════
    옥외광고
@@ -223,12 +242,11 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .oa-title{
   font-size:13px;font-weight:700;color:var(--ink);
   margin-bottom:10px;padding-bottom:8px;
-  border-bottom:1.5px solid var(--line);
+  border-bottom:2px solid var(--line-strong);
 }
-.oa-title:not(:first-child){margin-top:20px;}
 .oa-row{
   display:flex;align-items:center;
-  padding:8px 0;border-bottom:1px solid var(--line);
+  padding:8px 0;border-bottom:2px solid var(--line-strong);
 }
 .oa-row:last-child{border-bottom:none;}
 .oa-label{font-size:13px;color:var(--sub);flex:1;}
@@ -287,18 +305,18 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
    <div class="tab-card">
     <div class="calc-display">
       <div class="calc-history" id="calcHistory"></div>
-      <hr class="history-sep" id="historySep" style="display:none">
+      <hr class="divider history-sep" id="historySep" style="display:none">
       <div class="calc-expr-row" id="calcExpr">0</div>
       <div class="calc-result-row" id="calcPreview"></div>
     </div>
-    <div class="calc-top-row">
-      <button class="btn btn-clear"  onclick="ci('C')">C</button>
-      <button class="btn btn-paren"  onclick="ci('()')">( )</button>
-      <button class="btn btn-pct"    onclick="ci('%')">%</button>
-      <button class="btn btn-op"     onclick="ci('÷')">÷</button>
+    <div class="calc-back-row">
       <button class="btn btn-back"   onclick="ci('⌫')">⌫</button>
     </div>
     <div class="calc-grid">
+      <button class="btn btn-clear"  onclick="ci('C')">C</button>
+      <button class="btn btn-num"    onclick="ci('()')">( )</button>
+      <button class="btn btn-num"    onclick="ci('%')">%</button>
+      <button class="btn btn-op"     onclick="ci('÷')">÷</button>
       <button class="btn btn-num"    onclick="ci('7')">7</button>
       <button class="btn btn-num"    onclick="ci('8')">8</button>
       <button class="btn btn-num"    onclick="ci('9')">9</button>
@@ -311,7 +329,8 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
       <button class="btn btn-num"    onclick="ci('2')">2</button>
       <button class="btn btn-num"    onclick="ci('3')">3</button>
       <button class="btn btn-op"     onclick="ci('+')">+</button>
-      <button class="btn btn-num btn-zero" onclick="ci('0')">0</button>
+      <button class="btn btn-num"    onclick="ci('0')">0</button>
+      <button class="btn btn-num"    onclick="ci('00')">00</button>
       <button class="btn btn-num"    onclick="ci('.')">.</button>
       <button class="btn btn-eq"     onclick="ci('=')">=</button>
     </div>
@@ -322,7 +341,6 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   <div id="screen-fx" class="screen">
    <div class="tab-card">
       <div class="rate-group">
-        <div class="rate-label">변환 전</div>
         <div class="rate-row">
           <select class="rate-select" id="fromCur" onchange="convertFX()">
             <option value="KRW">🇰🇷 KRW 원</option>
@@ -334,7 +352,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
             <option value="AUD">🇦🇺 AUD 달러</option>
             <option value="PEN">🇵🇪 PEN 솔</option>
           </select>
-          <input class="rate-input" id="fromVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX()">
+          <input class="rate-input" id="fromVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX('from')">
         </div>
       </div>
       <div style="text-align:center;">
@@ -343,7 +361,6 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
         </button>
       </div>
       <div class="rate-group">
-        <div class="rate-label">변환 후</div>
         <div class="rate-row">
           <select class="rate-select" id="toCur" onchange="convertFX()">
             <option value="USD">🇺🇸 USD 달러</option>
@@ -355,12 +372,11 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
             <option value="AUD">🇦🇺 AUD 달러</option>
             <option value="PEN">🇵🇪 PEN 솔</option>
           </select>
-          <input class="rate-input" id="toVal" type="text" readonly
-            style="background:var(--bg);border-color:var(--line);">
+          <input class="rate-input" id="toVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX('to')">
         </div>
         <div class="rate-info" id="rateInfo"></div>
       </div>
-      <hr class="rate-divider">
+      <hr class="divider">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
         <span style="font-size:12px;color:var(--sub);font-weight:600;">주요 통화 (KRW 기준)</span>
         <span style="font-size:11px;color:var(--sub);" id="fxStatusText">환율 불러오는 중...</span>
@@ -375,13 +391,19 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
       <div class="unit-row">
         <select class="unit-select" id="fromUnit" onchange="convertUnit()"></select>
         <input class="unit-val" id="fromUnitVal" type="number" placeholder="0"
-          oninput="convertUnit()" style="border-color:var(--accent);">
+          oninput="convertUnit('from')" style="border-color:var(--accent);">
       </div>
-      <div class="unit-eq-text" id="unitEqText"></div>
+      <div style="text-align:center;">
+        <button class="rate-swap" onclick="swapUnit()">
+          <i class="ti ti-arrows-up-down"></i>
+        </button>
+      </div>
       <div class="unit-row">
         <select class="unit-select" id="toUnit" onchange="convertUnit()"></select>
-        <input class="unit-val" id="toUnitVal" type="number" readonly>
+        <input class="unit-val" id="toUnitVal" type="number" placeholder="0" oninput="convertUnit('to')">
       </div>
+      <div class="unit-eq-text" id="unitEqText"></div>
+      <hr class="divider">
       <div class="unit-tabs">
         <div class="unit-tab active" onclick="switchUnit('length',this)">길이</div>
         <div class="unit-tab" onclick="switchUnit('weight',this)">무게</div>
@@ -395,7 +417,6 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   <!-- ═══ 나이 ═══ -->
   <div id="screen-age" class="screen">
    <div class="tab-card">
-      <div class="field-label">생년월일</div>
       <div class="date-input-row">
         <input class="date-input date-input-year" type="tel" id="birthYear" placeholder="년(YYYY)" inputmode="numeric" maxlength="4" oninput="ageInputMove(this,'birthMonth',4)">
         <input class="date-input" type="tel" id="birthMonth" placeholder="월" inputmode="numeric" maxlength="2" oninput="ageInputMove(this,'birthDay',2)">
@@ -403,6 +424,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
       </div>
       <button class="primary-btn" onclick="calcAge()">나이 계산</button>
       <div id="ageResults" class="hidden">
+        <hr class="divider">
         <div class="age-results">
           <div class="age-result-card">
             <div class="result-label">세는 나이</div>
@@ -421,6 +443,19 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
           <div class="detail-row"><span class="k">오늘</span><span class="v" id="ageToday">–</span></div>
           <div class="detail-row"><span class="k">태어난 지</span><span class="v" id="ageDays">–</span></div>
           <div class="detail-row"><span class="k">다음 생일까지</span><span class="v" id="ageNextBday">–</span></div>
+        </div>
+        <button class="more-btn" id="moreBtn" onclick="toggleMore()">더 보기 ▾</button>
+        <div class="age-results" id="retireResults" style="display:none;">
+          <div class="age-result-card">
+            <div class="result-label">60세 퇴직일</div>
+            <div class="result-val small" id="retire60Date">–</div>
+            <div class="result-sub" id="retire60Left">–</div>
+          </div>
+          <div class="age-result-card">
+            <div class="result-label">65세 퇴직일</div>
+            <div class="result-val small" id="retire65Date">–</div>
+            <div class="result-sub" id="retire65Left">–</div>
+          </div>
         </div>
       </div>
    </div>
@@ -446,6 +481,8 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
         <span class="oa-unit">원</span>
       </div>
       <div class="oa-hint">1회 노출 단가 = 월 광고료 ÷ (일 노출횟수 × 30)</div>
+   </div>
+   <div class="tab-card">
       <div class="oa-title">재원 계산</div>
       <div class="oa-row">
         <span class="oa-label">구좌 운영</span>
@@ -567,21 +604,31 @@ function ci(k) {
       else curExpr = (curExpr || curDisp) + k;
       curDisp = k;
     }
+  } else if (k === '00') {
+    if (evaled) { curExpr = ''; curDisp = '0'; lastRes = null; evaled = false; }
+    appendDigit('0'); appendDigit('0');
+    const li = Math.max(...OPS.map(o => curExpr.lastIndexOf(o)),
+                        curExpr.lastIndexOf('('));
+    curExpr = li >= 0 ? curExpr.slice(0, li+1) + curDisp : curDisp;
   } else {
     if (evaled) { curExpr = ''; curDisp = '0'; lastRes = null; evaled = false; }
-    if (k === '.' && curDisp.includes('.')) { /* skip */ }
-    else if (k === '.' && (curDisp === '' || OPS.includes(curDisp) || curDisp === '(')) {
-      curDisp = '0.';
-    } else if ((curDisp === '0' || OPS.includes(curDisp) || curDisp === '(') && k !== '.') {
-      curDisp = k;
-    } else {
-      curDisp += k;
-    }
+    appendDigit(k);
     const li = Math.max(...OPS.map(o => curExpr.lastIndexOf(o)),
                         curExpr.lastIndexOf('('));
     curExpr = li >= 0 ? curExpr.slice(0, li+1) + curDisp : curDisp;
   }
   renderCalc();
+}
+
+function appendDigit(k) {
+  if (k === '.' && curDisp.includes('.')) { /* skip */ }
+  else if (k === '.' && (curDisp === '' || OPS.includes(curDisp) || curDisp === '(')) {
+    curDisp = '0.';
+  } else if ((curDisp === '0' || OPS.includes(curDisp) || curDisp === '(') && k !== '.') {
+    curDisp = k;
+  } else {
+    curDisp += k;
+  }
 }
 
 function renderCalc() {
@@ -644,6 +691,8 @@ function numVal(el) {
    환율
 ══════════════════════════════ */
 let fxRates = {};
+let fxLast = 'from';
+const CUR_SYMBOL = {USD:'$', JPY:'¥', CNY:'¥', EUR:'€', CAD:'C$', AUD:'A$', KRW:'₩', PEN:'S/'};
 
 async function loadFX() {
   try {
@@ -660,19 +709,28 @@ async function loadFX() {
   }
 }
 
-function convertFX() {
+function fmtFX(result) {
+  return result !== 0 && Math.abs(result) < 0.01
+    ? result.toFixed(6)
+    : numFmt(parseFloat(result.toFixed(2)));
+}
+
+function convertFX(dir) {
+  if (dir) fxLast = dir;
   if (!Object.keys(fxRates).length) return;
   const from = document.getElementById('fromCur').value;
   const to   = document.getElementById('toCur').value;
-  const val  = numVal(document.getElementById('fromVal'));
-  const rate = (1 / fxRates[from]) * fxRates[to];
-  const result = val * rate;
-  document.getElementById('toVal').value =
-    result !== 0 && Math.abs(result) < 0.01
-      ? result.toFixed(6)
-      : numFmt(parseFloat(result.toFixed(2)));
+  if (fxLast === 'to') {
+    const val  = numVal(document.getElementById('toVal'));
+    const rate = (1 / fxRates[to]) * fxRates[from];
+    document.getElementById('fromVal').value = fmtFX(val * rate);
+  } else {
+    const val  = numVal(document.getElementById('fromVal'));
+    const rate = (1 / fxRates[from]) * fxRates[to];
+    document.getElementById('toVal').value = fmtFX(val * rate);
+  }
   const base = from === 'KRW' ? 1000 : 1;
-  const baseRate = rate * base;
+  const baseRate = ((1 / fxRates[from]) * fxRates[to]) * base;
   const r1 = baseRate < 0.01 ? baseRate.toFixed(6) : baseRate.toFixed(4);
   document.getElementById('rateInfo').textContent = `${numFmt(base)} ${from} = ${r1} ${to}`;
 }
@@ -680,7 +738,11 @@ function convertFX() {
 function swapFX() {
   const f = document.getElementById('fromCur');
   const t = document.getElementById('toCur');
+  const fv = document.getElementById('fromVal');
+  const tv = document.getElementById('toVal');
   [f.value, t.value] = [t.value, f.value];
+  [fv.value, tv.value] = [tv.value, fv.value];
+  fxLast = fxLast === 'from' ? 'to' : 'from';
   convertFX();
 }
 
@@ -693,8 +755,8 @@ function renderQuick() {
         <span style="font-size:20px;">${f}</span>
         <span style="font-size:13px;font-weight:600;color:var(--ink);">${c}</span>
       </div>
-      <div style="font-size:12px;color:var(--sub);margin-top:4px;">
-        ₩1000 = ${c==='JPY'
+      <div style="font-size:12px;color:var(--sub);margin-top:4px;text-align:right;">
+        ₩1,000 = ${CUR_SYMBOL[c]}${c==='JPY'
           ? (1000*fxRates[c]).toFixed(1)
           : (1000*fxRates[c]).toFixed(2)}
       </div>
@@ -705,7 +767,7 @@ function setQuick(c) {
   document.getElementById('fromCur').value = 'KRW';
   document.getElementById('toCur').value   = c;
   document.getElementById('fromVal').value = '10,000';
-  convertFX();
+  convertFX('from');
 }
 
 loadFX();
@@ -756,6 +818,8 @@ const UNITS = {
 };
 
 let curUnitType = 'length';
+let unitLast = 'from';
+const TEMP_TIP = '°F = °C×9/5+32  ·  K = °C+273.15';
 
 function switchUnit(type, el) {
   curUnitType = type;
@@ -771,35 +835,69 @@ function loadUnitSelects() {
   document.getElementById('toUnit').innerHTML   = opts;
   document.getElementById('toUnit').selectedIndex = 1;
   document.getElementById('fromUnitVal').value = '';
+  document.getElementById('toUnitVal').value = '';
+  unitLast = 'from';
   convertUnit();
 }
 
-function convertUnit() {
-  const from = document.getElementById('fromUnit').value;
-  const to   = document.getElementById('toUnit').value;
-  const val  = parseFloat(document.getElementById('fromUnitVal').value) || 0;
-  const def  = UNITS[curUnitType];
-  let result;
-  if (curUnitType === 'temp') {
-    let c = from==='C' ? val : from==='F' ? (val-32)*5/9 : val-273.15;
-    result = to==='C' ? c : to==='F' ? c*9/5+32 : c+273.15;
-  } else {
-    const fu = def.units.find(u => u.k === from);
-    const tu = def.units.find(u => u.k === to);
-    result = val * fu.base / tu.base;
-  }
-  const disp = Math.abs(result) >= 0.0001 || result === 0
+function fmtUnit(result) {
+  return Math.abs(result) >= 0.0001 || result === 0
     ? parseFloat(result.toPrecision(8)).toString()
     : result.toExponential(4);
-  document.getElementById('toUnitVal').value = disp;
+}
+
+function tempConvert(val, from, to) {
+  const c = from==='C' ? val : from==='F' ? (val-32)*5/9 : val-273.15;
+  return to==='C' ? c : to==='F' ? c*9/5+32 : c+273.15;
+}
+
+function convertUnit(dir) {
+  if (dir) unitLast = dir;
+  const from = document.getElementById('fromUnit').value;
+  const to   = document.getElementById('toUnit').value;
+  const def  = UNITS[curUnitType];
+  if (unitLast === 'to') {
+    const val = parseFloat(document.getElementById('toUnitVal').value) || 0;
+    let result;
+    if (curUnitType === 'temp') {
+      result = tempConvert(val, to, from);
+    } else {
+      const fu = def.units.find(u => u.k === from);
+      const tu = def.units.find(u => u.k === to);
+      result = val * tu.base / fu.base;
+    }
+    document.getElementById('fromUnitVal').value = fmtUnit(result);
+  } else {
+    const val = parseFloat(document.getElementById('fromUnitVal').value) || 0;
+    let result;
+    if (curUnitType === 'temp') {
+      result = tempConvert(val, from, to);
+    } else {
+      const fu = def.units.find(u => u.k === from);
+      const tu = def.units.find(u => u.k === to);
+      result = val * fu.base / tu.base;
+    }
+    document.getElementById('toUnitVal').value = fmtUnit(result);
+  }
   if (curUnitType !== 'temp') {
-    const fu = UNITS[curUnitType].units.find(u => u.k === from);
-    const tu = UNITS[curUnitType].units.find(u => u.k === to);
+    const fu = def.units.find(u => u.k === from);
+    const tu = def.units.find(u => u.k === to);
     const r  = parseFloat((fu.base / tu.base).toPrecision(6));
     document.getElementById('unitEqText').textContent = `1 ${from} = ${r} ${to}`;
   } else {
-    document.getElementById('unitEqText').textContent = '';
+    document.getElementById('unitEqText').textContent = TEMP_TIP;
   }
+}
+
+function swapUnit() {
+  const f = document.getElementById('fromUnit');
+  const t = document.getElementById('toUnit');
+  const fv = document.getElementById('fromUnitVal');
+  const tv = document.getElementById('toUnitVal');
+  [f.value, t.value] = [t.value, f.value];
+  [fv.value, tv.value] = [tv.value, fv.value];
+  unitLast = unitLast === 'from' ? 'to' : 'from';
+  convertUnit();
 }
 
 loadUnitSelects();
@@ -846,7 +944,23 @@ function calcAge() {
   document.getElementById('ageToday').textContent  = `${ty}.${String(tm+1).padStart(2,'0')}.${String(td).padStart(2,'0')}`;
   document.getElementById('ageDays').textContent   = diffDays.toLocaleString() + '일';
   document.getElementById('ageNextBday').textContent = daysLeft + '일';
+
+  [[60,'retire60Date','retire60Left'],[65,'retire65Date','retire65Left']].forEach(([age,dId,lId]) => {
+    const rd = new Date(by + age, bm, bd);
+    const rDaysLeft = Math.ceil((rd - t) / 86400000);
+    const years = Math.abs(rDaysLeft / 365.25).toFixed(1);
+    document.getElementById(dId).textContent = `${rd.getFullYear()}.${String(rd.getMonth()+1).padStart(2,'0')}.${String(rd.getDate()).padStart(2,'0')}`;
+    document.getElementById(lId).textContent = rDaysLeft >= 0 ? `${years}년 남음` : `${years}년 지남`;
+  });
+
   document.getElementById('ageResults').classList.remove('hidden');
+}
+
+let moreShown = false;
+function toggleMore() {
+  moreShown = !moreShown;
+  document.getElementById('retireResults').style.display = moreShown ? 'grid' : 'none';
+  document.getElementById('moreBtn').textContent = moreShown ? '접기 ▴' : '더 보기 ▾';
 }
 
 /* ══════════════════════════════
