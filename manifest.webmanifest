@@ -4,8 +4,8 @@
   "description": "계산기 · 환율 · 단위 · 나이 · 옥외광고 계산기",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F3E8CD",
-  "theme_color": "#5B56C8",
+  "background_color": "#F5F6FB",
+  "theme_color": "#5B54E8",
   "orientation": "portrait",
   "icons": [
     {
