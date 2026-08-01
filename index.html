@@ -11,9 +11,10 @@
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <title>My Calculator</title>
 <style>
+:root{--shadow:0 1px 2px rgba(31,36,55,.04),0 8px 24px rgba(31,36,55,.06);}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:#fff;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;display:flex;justify-content:center;align-items:flex-start;background:#fff;}
+body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;display:flex;justify-content:center;align-items:flex-start;background:#fff;}
 
 #app{
   width:100%;
@@ -27,26 +28,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 
 /* ── 헤더 ── */
 .app-header{
-  background:#fff;
+  background:transparent;
   padding:env(safe-area-inset-top,14px) 16px 10px;
   padding-top:max(env(safe-area-inset-top),14px);
   display:flex;align-items:center;gap:10px;
   flex-shrink:0;
-  box-shadow:0 1px 0 rgba(0,0,0,0.05);
-  position:relative;z-index:2;
 }
-.header-icon{width:38px;height:38px;border-radius:9px;overflow:hidden;flex-shrink:0;}
+.header-icon{width:42px;height:42px;border-radius:13px;overflow:hidden;flex-shrink:0;}
 .header-icon img{width:100%;height:100%;object-fit:cover;}
-.header-title{font-size:20px;font-weight:700;color:#2D2A8A;letter-spacing:-0.3px;}
+.header-title{font-size:20px;font-weight:700;color:#1A1864;letter-spacing:-0.3px;}
 
 /* ── 탭바 ── */
 .tab-bar{
   display:flex;
-  background:#fff;
+  background:transparent;
   padding:0 2px;
   overflow-x:auto;
   flex-shrink:0;
-  border-bottom:1px solid #EEECF9;
+  border-bottom:1px solid #EFEFF4;
 }
 .tab-bar::-webkit-scrollbar{display:none;}
 .tab-item{
@@ -73,8 +72,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 ══════════════════════════════ */
 .calc-display{
   background:#fff;
-  border-radius:14px;
-  border:1.5px solid #C0BDED;
+  border-radius:18px;
+  box-shadow:var(--shadow);
   padding:14px 18px 10px;
   margin-bottom:10px;
   min-height:168px;
@@ -122,8 +121,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
    환율
 ══════════════════════════════ */
 .rate-box{
-  background:#fff;border-radius:14px;
-  border:1.5px solid #C0BDED;
+  background:#fff;border-radius:18px;
+  box-shadow:var(--shadow);
   padding:14px;margin-bottom:28px;
 }
 .rate-group{padding:4px 0;}
@@ -150,8 +149,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 .rate-info{font-size:11px;color:#AAA;text-align:right;margin-top:6px;}
 .quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
 .quick-card{
-  background:#fff;border-radius:10px;
-  border:1.5px solid #C0BDED;
+  background:#fff;border-radius:14px;
+  box-shadow:var(--shadow);
   padding:10px 12px;cursor:pointer;
 }
 .quick-card:active{background:#EEEDFE;}
@@ -167,8 +166,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 }
 .unit-tab.active{background:#5B56C8;color:#fff;border-color:#5B56C8;}
 .unit-card{
-  background:#fff;border-radius:12px;overflow:hidden;
-  border:1.5px solid #C0BDED;padding:16px;
+  background:#fff;border-radius:18px;overflow:hidden;
+  box-shadow:var(--shadow);padding:16px;
 }
 .unit-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;overflow:hidden;}
 .unit-row:last-child{margin-bottom:0;}
@@ -188,8 +187,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
    나이
 ══════════════════════════════ */
 .age-card{
-  background:#fff;border-radius:12px;
-  border:1.5px solid #C0BDED;padding:16px;margin-bottom:12px;
+  background:#fff;border-radius:18px;
+  box-shadow:var(--shadow);padding:16px;margin-bottom:12px;
 }
 .field-label{font-size:13px;color:#666;margin-bottom:8px;font-weight:500;}
 .date-input-row{display:flex;gap:8px;}
@@ -208,8 +207,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
 .primary-btn:active{background:#4A46B0;}
 .age-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
 .age-result-card{
-  background:#F0EFF9;border-radius:10px;
-  border:1.5px solid #C0BDED;padding:12px;
+  background:#F5F5FB;border-radius:12px;
+  padding:12px;
 }
 .result-label{font-size:11px;color:#888;margin-bottom:4px;}
 .result-val{font-size:26px;font-weight:500;color:#4B47B8;}
@@ -227,8 +226,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans
    옥외광고
 ══════════════════════════════ */
 .oa-section{
-  background:#fff;border-radius:12px;
-  border:1.5px solid #C0BDED;padding:14px;margin-bottom:10px;
+  background:#fff;border-radius:18px;
+  box-shadow:var(--shadow);padding:14px;margin-bottom:10px;
 }
 .oa-title{
   font-size:13px;font-weight:600;color:#3C3489;
