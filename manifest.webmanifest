@@ -1,6 +1,6 @@
 {
-  "name": "My Calculator 1.0",
-  "short_name": "My Calculator 1.0",
+  "name": "My Calculator",
+  "short_name": "My Calculator",
   "description": "계산기 · 환율 · 단위 · 나이 · 옥외광고 계산기",
   "start_url": "/",
   "display": "standalone",
