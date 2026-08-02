@@ -395,7 +395,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
    <div class="tab-card">
       <div class="unit-row">
         <select class="unit-select" id="fromUnit" onchange="convertUnit()"></select>
-        <input class="unit-val" id="fromUnitVal" type="number" placeholder="0"
+        <input class="unit-val" id="fromUnitVal" type="number" placeholder="0" style="height:40px;"
           oninput="convertUnit('from')">
       </div>
       <div style="text-align:center;">
@@ -405,7 +405,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
       </div>
       <div class="unit-row">
         <select class="unit-select" id="toUnit" onchange="convertUnit()"></select>
-        <input class="unit-val" id="toUnitVal" type="number" placeholder="0" oninput="convertUnit('to')">
+        <input class="unit-val" id="toUnitVal" type="number" placeholder="0" style="height:40px;" oninput="convertUnit('to')">
       </div>
       <div class="unit-eq-text" id="unitEqText"></div>
    </div>
