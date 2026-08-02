@@ -137,7 +137,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .btn-op{background:var(--accent-soft);color:var(--accent);font-size:24px;font-weight:700;}
 .btn-eq{background:var(--accent);color:#fff;font-size:26px;}
 .btn-clear{background:var(--danger-soft);color:var(--danger);font-size:20px;font-weight:700;}
-.btn-back{background:var(--accent);color:#fff;font-size:22px;height:40px;}
+.btn-back{background:var(--card);border:1.5px solid var(--line);color:var(--ink);font-size:24px;}
 .calc-keypad-card{padding-top:8px;}
 
 /* ══════════════════════════════
@@ -148,7 +148,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .rate-select{
   flex:1;min-width:0;height:40px;border-radius:10px;
   border:1.5px solid var(--line);padding:0 8px;
-  font-size:13px;background:var(--bg);color:var(--ink);text-align:center;
+  font-size:15px;font-weight:700;background:var(--bg);color:var(--ink);text-align:center;
   -webkit-appearance:none;appearance:none;
 }
 .rate-input{
@@ -175,23 +175,23 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 /* ══════════════════════════════
    단위
 ══════════════════════════════ */
-.unit-tabs{display:flex;gap:4px;background:var(--bg);border-radius:12px;padding:4px;margin-top:0;}
+.unit-tabs{display:flex;gap:4px;background:transparent;border-radius:12px;padding:4px;margin-top:0;}
 .unit-tab{
   flex:1;text-align:center;
   padding:8px 4px;border-radius:9px;font-size:12px;font-weight:700;
-  border:1.5px solid var(--line);background:transparent;
+  border:2px solid var(--line);background:var(--card);
   cursor:pointer;color:var(--sub);
 }
-.unit-tab.active{background:var(--card);color:var(--accent);border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+.unit-tab.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);}
 .unit-row{display:flex;gap:8px;align-items:center;overflow:hidden;}
 .unit-select{
-  width:120px;height:38px;border-radius:10px;flex-shrink:0;
+  flex:1;min-width:0;height:40px;border-radius:10px;
   border:1.5px solid var(--line);padding:0 8px;
-  font-size:12px;background:var(--bg);color:var(--ink);text-align:center;
+  font-size:15px;font-weight:700;background:var(--bg);color:var(--ink);text-align:center;
   -webkit-appearance:none;appearance:none;
 }
 .unit-val{
-  flex:1;min-width:0;width:0;height:38px;border-radius:10px;
+  flex:1.5;min-width:0;width:0;height:40px;border-radius:10px;
   border:1.5px solid var(--line);padding:0 10px;
   font-size:16px;background:var(--bg);color:var(--ink);text-align:right;
 }
@@ -208,6 +208,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   text-align:center;
 }
 .date-input-year{flex:1.3;}
+.date-input::placeholder{font-size:13px;font-weight:300;}
 .primary-btn{
   width:100%;height:46px;border-radius:14px;
   background:var(--accent);color:#fff;border:none;
@@ -244,8 +245,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 ══════════════════════════════ */
 .oa-title{
   font-size:13px;font-weight:700;color:var(--ink);
-  margin-bottom:10px;padding-bottom:8px;
-  border-bottom:2px solid var(--line-strong);
+  margin-bottom:10px;
 }
 .oa-row{
   display:flex;align-items:center;
@@ -315,7 +315,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
    </div>
    <div class="tab-card calc-keypad-card">
     <div class="calc-back-row">
-      <button class="btn btn-back"   onclick="ci('⌫')">⌫</button>
+      <button class="btn btn-back"   onclick="ci('⌫')"><i class="ti ti-backspace"></i></button>
     </div>
     <div class="calc-grid">
       <button class="btn btn-clear"  onclick="ci('C')">C</button>
