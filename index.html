@@ -89,6 +89,11 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 /* ── 스크린 / 탭 카드 ── */
 .screen{display:none;padding:0 10px 10px;overflow-y:auto;flex:1;}
 .screen.active{display:block;}
+#app{overflow-x:hidden;}
+.screen.enter-from-right{animation:screenEnterFromRight .2s ease;}
+.screen.enter-from-left{animation:screenEnterFromLeft .2s ease;}
+@keyframes screenEnterFromRight{from{transform:translateX(28px);opacity:0;}to{transform:none;opacity:1;}}
+@keyframes screenEnterFromLeft{from{transform:translateX(-28px);opacity:0;}to{transform:none;opacity:1;}}
 .tab-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;}
 .tab-card + .tab-card{margin-top:12px;}
 .tab-card.corner-first{border-radius:0 var(--radius) var(--radius) var(--radius);}
@@ -524,8 +529,13 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
    탭 전환
 ══════════════════════════════ */
 const TABS = ['calc','fx','unit','age','oa'];
+let currentTab = 'calc';
 function switchTab(t) {
+  if (t === currentTab) return;
   const idx = TABS.indexOf(t);
+  const forward = idx > TABS.indexOf(currentTab);
+  currentTab = t;
+
   document.querySelectorAll('.tab-item').forEach((el,i) =>
     el.classList.toggle('active', TABS[i] === t));
   document.querySelectorAll('.screen').forEach(el =>
@@ -537,7 +547,54 @@ function switchTab(t) {
     card.classList.toggle('corner-first', idx === 0);
     card.classList.toggle('corner-last', idx === TABS.length - 1);
   }
+
+  screen.classList.remove('enter-from-left', 'enter-from-right');
+  void screen.offsetWidth;
+  screen.classList.add(forward ? 'enter-from-right' : 'enter-from-left');
 }
+
+/* ══════════════════════════════
+   탭 스와이프 (하단 화면 영역에서만 인식)
+══════════════════════════════ */
+(function initTabSwipe() {
+  const SWIPE_MIN_X   = 50;
+  const SWIPE_MAX_Y   = 80;
+  const SWIPE_MAX_TIME = 600;
+  let startX = 0, startY = 0, startT = 0, tracking = false;
+
+  function isInteractive(el) {
+    return !!el.closest(
+      'button, input, select, textarea, a, .btn, .tab-item, .unit-tab, ' +
+      '.rate-swap, .more-btn, .quick-card, .history-line'
+    );
+  }
+
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.addEventListener('touchstart', e => {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      tracking = !isInteractive(e.target);
+      if (!tracking) return;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      startT = Date.now();
+    }, { passive: true });
+
+    screen.addEventListener('touchend', e => {
+      if (!tracking) return;
+      tracking = false;
+      const touch = e.changedTouches[0];
+      const dx = touch.clientX - startX;
+      const dy = touch.clientY - startY;
+      const dt = Date.now() - startT;
+      if (dt > SWIPE_MAX_TIME) return;
+      if (Math.abs(dx) < SWIPE_MIN_X || Math.abs(dy) > SWIPE_MAX_Y) return;
+
+      const idx = TABS.indexOf(currentTab);
+      if (dx < 0 && idx < TABS.length - 1) switchTab(TABS[idx + 1]);
+      else if (dx > 0 && idx > 0) switchTab(TABS[idx - 1]);
+    }, { passive: true });
+  });
+})();
 
 /* ══════════════════════════════
    계산기
