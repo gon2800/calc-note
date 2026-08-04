@@ -356,6 +356,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
             <option value="KRW">🇰🇷 KRW 원</option>
             <option value="USD">🇺🇸 USD 달러</option>
             <option value="CNY">🇨🇳 CNY 위안</option>
+            <option value="VND">🇻🇳 VND 동</option>
             <option value="JPY">🇯🇵 JPY 엔</option>
             <option value="EUR">🇪🇺 EUR 유로</option>
             <option value="CAD">🇨🇦 CAD 달러</option>
@@ -376,6 +377,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
             <option value="USD">🇺🇸 USD 달러</option>
             <option value="KRW">🇰🇷 KRW 원</option>
             <option value="CNY">🇨🇳 CNY 위안</option>
+            <option value="VND">🇻🇳 VND 동</option>
             <option value="JPY">🇯🇵 JPY 엔</option>
             <option value="EUR">🇪🇺 EUR 유로</option>
             <option value="CAD">🇨🇦 CAD 달러</option>
@@ -764,7 +766,7 @@ function numVal(el) {
 ══════════════════════════════ */
 let fxRates = {};
 let fxLast = 'from';
-const CUR_SYMBOL = {USD:'$', JPY:'¥', CNY:'¥', EUR:'€', CAD:'C$', AUD:'A$', KRW:'₩', PEN:'S/'};
+const CUR_SYMBOL = {USD:'$', JPY:'¥', CNY:'¥', VND:'₫', EUR:'€', CAD:'C$', AUD:'A$', KRW:'₩', PEN:'S/'};
 
 async function loadFX() {
   try {
