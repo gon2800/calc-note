@@ -87,13 +87,10 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .tab-item .ti{display:block;font-size:19px;margin-bottom:3px;}
 
 /* ── 스크린 / 탭 카드 ── */
-.screen{display:none;padding:0 10px 10px;overflow-y:auto;flex:1;}
+.screens{position:relative;flex:1;overflow:hidden;}
+.screen{display:none;padding:0 10px 10px;overflow-y:auto;position:absolute;top:0;left:0;width:100%;height:100%;}
 .screen.active{display:block;}
 #app{overflow-x:hidden;}
-.screen.enter-from-right{animation:screenEnterFromRight .2s ease;}
-.screen.enter-from-left{animation:screenEnterFromLeft .2s ease;}
-@keyframes screenEnterFromRight{from{transform:translateX(28px);opacity:0;}to{transform:none;opacity:1;}}
-@keyframes screenEnterFromLeft{from{transform:translateX(-28px);opacity:0;}to{transform:none;opacity:1;}}
 .tab-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;}
 .tab-card + .tab-card{margin-top:12px;}
 .tab-card.corner-first{border-radius:0 var(--radius) var(--radius) var(--radius);}
@@ -308,6 +305,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
     </div>
   </div>
 
+  <div class="screens">
   <!-- ═══ 계산기 ═══ -->
   <div id="screen-calc" class="screen active">
    <div class="tab-card corner-first">
@@ -517,6 +515,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
       </div>
    </div>
   </div>
+  </div><!-- .screens -->
 
 </div><!-- #app -->
 
@@ -528,36 +527,62 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 ══════════════════════════════ */
 const TABS = ['calc','fx','unit','age','oa'];
 let currentTab = 'calc';
+let tabSwitching = false;
 function switchTab(t) {
-  if (t === currentTab) return;
+  if (t === currentTab || tabSwitching) return;
   const idx = TABS.indexOf(t);
-  const forward = idx > TABS.indexOf(currentTab);
+  const curIdx = TABS.indexOf(currentTab);
+  const forward = idx > curIdx;
+
+  const oldScreen = document.getElementById('screen-' + currentTab);
+  const newScreen = document.getElementById('screen-' + t);
   currentTab = t;
 
   document.querySelectorAll('.tab-item').forEach((el,i) =>
     el.classList.toggle('active', TABS[i] === t));
-  document.querySelectorAll('.screen').forEach(el =>
-    el.classList.remove('active'));
-  const screen = document.getElementById('screen-' + t);
-  screen.classList.add('active');
-  const card = screen.querySelector('.tab-card');
+  const card = newScreen.querySelector('.tab-card');
   if (card) {
     card.classList.toggle('corner-first', idx === 0);
     card.classList.toggle('corner-last', idx === TABS.length - 1);
   }
 
-  screen.classList.remove('enter-from-left', 'enter-from-right');
-  void screen.offsetWidth;
-  screen.classList.add(forward ? 'enter-from-right' : 'enter-from-left');
+  tabSwitching = true;
+  newScreen.style.transition = 'none';
+  newScreen.style.transform = `translateX(${forward ? 100 : -100}%)`;
+  newScreen.classList.add('active');
+  oldScreen.style.transition = 'none';
+  oldScreen.style.transform = 'translateX(0)';
+
+  void newScreen.offsetWidth; // reflow so the transition below is picked up
+
+  requestAnimationFrame(() => {
+    oldScreen.style.transition = newScreen.style.transition = 'transform .25s ease';
+    oldScreen.style.transform = `translateX(${forward ? -100 : 100}%)`;
+    newScreen.style.transform = 'translateX(0)';
+  });
+
+  let cleaned = false;
+  const cleanup = () => {
+    if (cleaned) return;
+    cleaned = true;
+    oldScreen.classList.remove('active');
+    oldScreen.style.transition = oldScreen.style.transform = '';
+    newScreen.style.transition = newScreen.style.transform = '';
+    tabSwitching = false;
+    newScreen.removeEventListener('transitionend', cleanup);
+  };
+  newScreen.addEventListener('transitionend', cleanup);
+  setTimeout(cleanup, 300);
 }
 
 /* ══════════════════════════════
-   탭 스와이프 (하단 화면 영역에서만 인식)
+   탭 스와이프 (화면 하단 30% 영역에서만 인식)
 ══════════════════════════════ */
 (function initTabSwipe() {
   const SWIPE_MIN_X   = 50;
   const SWIPE_MAX_Y   = 80;
   const SWIPE_MAX_TIME = 600;
+  const SWIPE_ZONE_RATIO = 0.3; // 화면 하단 30%
   let startX = 0, startY = 0, startT = 0, tracking = false;
 
   function isInteractive(el) {
@@ -570,10 +595,13 @@ function switchTab(t) {
   document.querySelectorAll('.screen').forEach(screen => {
     screen.addEventListener('touchstart', e => {
       if (e.touches.length !== 1) { tracking = false; return; }
+      const y = e.touches[0].clientY;
+      const zoneTop = window.innerHeight * (1 - SWIPE_ZONE_RATIO);
+      if (y < zoneTop) { tracking = false; return; }
       tracking = !isInteractive(e.target);
       if (!tracking) return;
       startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
+      startY = y;
       startT = Date.now();
     }, { passive: true });
 
