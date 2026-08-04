@@ -1,4 +1,4 @@
-const CACHE_NAME = 'calc-note-v31';
+const CACHE_NAME = 'calc-note-v32';
 const ASSETS = [
   '/',
   '/index.html',
