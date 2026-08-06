@@ -270,6 +270,9 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 }
 .oa-footnote{font-size:11px;color:var(--sub);text-align:center;margin-top:10px;}
 
+/* ── 재원 분석 ── */
+.rf-tile .oa-row{border-bottom:none;}
+
 /* ── 수익성 분석 ── */
 .pa-tile .oa-title{margin-bottom:8px;}
 .pa-tile .oa-row{padding:6px 0;border-bottom:none;}
@@ -296,11 +299,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   background:var(--accent-soft);border:2px solid var(--accent);border-radius:8px;
   padding:6px 8px;font-size:14px;font-weight:600;color:var(--ink);
 }
-.pa-cost-del{
-  flex-shrink:0;width:26px;height:26px;border-radius:50%;
-  background:var(--danger-soft);color:var(--danger);border:none;
-  font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-}
+.pa-cost-unit{font-size:12px;color:var(--sub);flex-shrink:0;}
 .pa-add-btn{
   display:flex;align-items:center;justify-content:center;gap:4px;
   width:100%;height:38px;border-radius:10px;margin-top:8px;
@@ -517,8 +516,8 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 
   <!-- ═══ 옥외광고 ═══ -->
   <div id="screen-oa" class="screen">
-   <div class="tab-card">
-      <div class="oa-title">1구좌 노출 분석</div>
+   <div class="tab-card rf-tile">
+      <div class="oa-title">재원 분석</div>
       <div class="oa-rows">
         <div class="oa-row">
           <span class="oa-label">월 광고료</span>
@@ -535,11 +534,6 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
           <span class="oa-calc" id="oa_cpe">–</span>
           <span class="oa-unit">원</span>
         </div>
-      </div>
-   </div>
-   <div class="tab-card">
-      <div class="oa-title">재원 계산</div>
-      <div class="oa-rows">
         <div class="oa-row">
           <span class="oa-label">구좌 운영</span>
           <input class="oa-input" id="oa_slots" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcOA()">
@@ -1203,14 +1197,13 @@ function calcOA() {
 /* ══════════════════════════════
    수익성 분석
 ══════════════════════════════ */
-const PA_DEFAULT_COSTS = ['전기료','유지보수','민관기여금','빌딩임대료'];
 const PA_WACC  = 9.16; // %, 고정값
 const PA_TAX   = 24.2; // %, 고정값
 const PA_YEARS = 5;    // 년, 고정값
 let paCostSeq = 0;
 
 function paInit() {
-  PA_DEFAULT_COSTS.forEach(name => addCostItem(name, ''));
+  addCostItem('', '');
   calcPA();
 }
 
@@ -1220,16 +1213,10 @@ function addCostItem(name, amount) {
   row.className = 'pa-cost-row';
   row.dataset.id = id;
   row.innerHTML =
-    '<input class="pa-cost-name" type="text" placeholder="항목명" value="' + (name || '') + '" oninput="calcPA()">' +
+    '<input class="pa-cost-name" type="text" placeholder="비용 입력" value="' + (name || '') + '" oninput="calcPA()">' +
     '<input class="pa-cost-amt" type="text" inputmode="numeric" placeholder="0" value="' + (amount || '') + '" oninput="formatWithCommas(this,false);calcPA()">' +
-    '<button class="pa-cost-del" type="button" onclick="removeCostItem(\'' + id + '\')"><i class="ti ti-x"></i></button>';
+    '<span class="pa-cost-unit">천원</span>';
   document.getElementById('pa_costList').appendChild(row);
-  calcPA();
-}
-
-function removeCostItem(id) {
-  const row = document.querySelector('.pa-cost-row[data-id="' + id + '"]');
-  if (row) row.remove();
   calcPA();
 }
 
