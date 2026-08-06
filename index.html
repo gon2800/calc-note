@@ -268,6 +268,49 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   font-size:15px;font-weight:700;
   color:var(--accent);padding:5px 8px;
 }
+.oa-footnote{font-size:11px;color:var(--sub);text-align:center;margin-top:10px;}
+
+/* ── 수익성 분석 ── */
+.pa-cost-row{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 0;border-bottom:2px solid var(--line-strong);
+}
+.pa-cost-row:last-child{border-bottom:none;}
+.pa-cost-name{
+  flex:1;min-width:0;
+  background:var(--bg);border:1.5px solid var(--line);border-radius:8px;
+  padding:6px 8px;font-size:13px;color:var(--ink);
+}
+.pa-cost-amt{
+  width:100px;flex-shrink:0;text-align:right;
+  background:var(--accent-soft);border:2px solid var(--accent);border-radius:8px;
+  padding:6px 8px;font-size:14px;font-weight:600;color:var(--ink);
+}
+.pa-cost-del{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  background:var(--danger-soft);color:var(--danger);border:none;
+  font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.pa-add-btn{
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  width:100%;height:38px;border-radius:10px;margin-top:8px;
+  background:var(--accent-soft);color:var(--accent);border:none;
+  font-size:13px;font-weight:700;cursor:pointer;
+}
+.pa-table-wrap{overflow-x:auto;margin-top:4px;-webkit-overflow-scrolling:touch;}
+.pa-table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap;}
+.pa-table th,.pa-table td{padding:7px 10px;text-align:right;border-bottom:2px solid var(--line-strong);}
+.pa-table thead th{color:var(--sub);font-weight:700;font-size:11px;}
+.pa-table thead th:first-child{position:sticky;left:0;background:var(--card);z-index:2;text-align:left;}
+.pa-table tbody th{
+  position:sticky;left:0;background:var(--card);
+  text-align:left;color:var(--sub);font-weight:600;z-index:1;
+}
+.pa-table tr:last-child th,.pa-table tr:last-child td{border-bottom:none;}
+.pa-summary-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;}
+.pa-summary-card{background:var(--bg);border-radius:12px;padding:10px 6px;text-align:center;}
+.pa-summary-card .result-label{margin-bottom:6px;}
+.pa-summary-card .result-val{font-size:16px;}
 
 .hidden{display:none;}
 
@@ -513,6 +556,68 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
           <span class="oa-unit">원</span>
         </div>
       </div>
+   </div>
+
+   <div class="tab-card">
+      <div class="oa-title">수익성 분석</div>
+      <div class="oa-rows">
+        <div class="oa-row">
+          <span class="oa-label">매출 (연간)</span>
+          <input class="oa-input" id="pa_revenue" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcPA()">
+          <span class="oa-unit">만원</span>
+        </div>
+        <div class="oa-row">
+          <span class="oa-label">투자비 (초기)</span>
+          <input class="oa-input" id="pa_invest" type="text" inputmode="numeric" placeholder="0" oninput="formatWithCommas(this,false);calcPA()">
+          <span class="oa-unit">만원</span>
+        </div>
+      </div>
+
+      <div class="oa-title" style="margin-top:14px;">비용 항목</div>
+      <div id="pa_costList"></div>
+      <button class="pa-add-btn" onclick="addCostItem('','')" type="button"><i class="ti ti-plus"></i>항목 추가</button>
+
+      <div class="oa-rows" style="margin-top:14px;">
+        <div class="oa-row">
+          <span class="oa-label">WACC</span>
+          <input class="oa-input" id="pa_wacc" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);calcPA()">
+          <span class="oa-unit">%</span>
+        </div>
+        <div class="oa-row">
+          <span class="oa-label">법인세율</span>
+          <input class="oa-input" id="pa_tax" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);calcPA()">
+          <span class="oa-unit">%</span>
+        </div>
+        <div class="oa-row">
+          <span class="oa-label">분석기간</span>
+          <input class="oa-input" id="pa_years" type="text" inputmode="numeric" value="5" oninput="formatWithCommas(this,false);calcPA()">
+          <span class="oa-unit">년</span>
+        </div>
+      </div>
+   </div>
+
+   <div class="tab-card">
+      <div class="oa-title">연도별 분석 결과</div>
+      <div class="pa-table-wrap">
+        <table class="pa-table" id="pa_table"></table>
+      </div>
+
+      <div class="pa-summary-grid">
+        <div class="pa-summary-card">
+          <div class="result-label">NPV</div>
+          <div class="result-val small" id="pa_npv">–</div>
+        </div>
+        <div class="pa-summary-card">
+          <div class="result-label">IRR</div>
+          <div class="result-val small" id="pa_irr">–</div>
+        </div>
+        <div class="pa-summary-card">
+          <div class="result-label">BEP</div>
+          <div class="result-val small" id="pa_bep">–</div>
+        </div>
+      </div>
+
+      <div class="oa-footnote" id="pa_footnote">WACC 0% · 법인세율 0% 적용</div>
    </div>
   </div>
   </div><!-- .screens -->
@@ -1099,6 +1204,148 @@ function calcOA() {
   document.getElementById('oa_monthly').textContent = slots > 0 && cost > 0 ? monthlyRev.toLocaleString('ko-KR') : '–';
   document.getElementById('oa_yearly').textContent  = slots > 0 && cost > 0 ? yearlyRev.toLocaleString('ko-KR')  : '–';
 }
+
+/* ══════════════════════════════
+   수익성 분석
+══════════════════════════════ */
+const PA_DEFAULT_COSTS = ['감가상각비','영업수수료%','전기료','유지보수','민관기여금','빌딩임대료'];
+const PA_ROW_DEFS = [
+  ['revenue',   '매출'],
+  ['invest',    '투자'],
+  ['cost',      '총비용'],
+  ['profit',    '이익'],
+  ['cumProfit', '누적이익'],
+  ['margin',    '이익율(%)'],
+  ['tax',       '법인세'],
+  ['afterTax',  '세후이익'],
+  ['fcf',       'FCF'],
+  ['cumFCF',    '누적FCF'],
+  ['dcf',       'DCF'],
+  ['cumDCF',    '누적DCF'],
+];
+let paCostSeq = 0;
+
+function paInit() {
+  PA_DEFAULT_COSTS.forEach(name => addCostItem(name, ''));
+  calcPA();
+}
+
+function addCostItem(name, amount) {
+  const id = 'pc_' + (paCostSeq++);
+  const row = document.createElement('div');
+  row.className = 'pa-cost-row';
+  row.dataset.id = id;
+  row.innerHTML =
+    '<input class="pa-cost-name" type="text" placeholder="항목명" value="' + (name || '') + '" oninput="calcPA()">' +
+    '<input class="pa-cost-amt" type="text" inputmode="numeric" placeholder="0" value="' + (amount || '') + '" oninput="formatWithCommas(this,false);calcPA()">' +
+    '<button class="pa-cost-del" type="button" onclick="removeCostItem(\'' + id + '\')"><i class="ti ti-x"></i></button>';
+  document.getElementById('pa_costList').appendChild(row);
+  calcPA();
+}
+
+function removeCostItem(id) {
+  const row = document.querySelector('.pa-cost-row[data-id="' + id + '"]');
+  if (row) row.remove();
+  calcPA();
+}
+
+function calcIRR(cashflows) {
+  const npvAt = rate => cashflows.reduce((s, cf, i) => s + cf / Math.pow(1 + rate, i + 1), 0);
+  let lo = -0.99, hi = 10;
+  let fLo = npvAt(lo), fHi = npvAt(hi);
+  if ((fLo < 0) === (fHi < 0)) return null;
+  for (let i = 0; i < 100; i++) {
+    const mid = (lo + hi) / 2;
+    const fMid = npvAt(mid);
+    if (Math.abs(fMid) < 1e-6) return mid;
+    if ((fLo < 0) === (fMid < 0)) { lo = mid; fLo = fMid; } else { hi = mid; }
+  }
+  return (lo + hi) / 2;
+}
+
+function calcBEP(cumFCF, invest) {
+  let prev = -invest;
+  for (let y = 1; y <= cumFCF.length; y++) {
+    const cur = cumFCF[y - 1];
+    if (prev >= 0) return y - 1;
+    if (cur >= 0) return (y - 1) + (-prev / (cur - prev));
+    prev = cur;
+  }
+  return null;
+}
+
+function renderPATable(years, rows) {
+  let thead = '<thead><tr><th>구분</th>';
+  for (let y = 1; y <= years; y++) thead += '<th>Y' + y + '</th>';
+  thead += '</tr></thead>';
+  let tbody = '<tbody>';
+  PA_ROW_DEFS.forEach(([key, label]) => {
+    tbody += '<tr><th>' + label + '</th>';
+    rows[key].forEach(v => {
+      const txt = key === 'margin' ? v.toFixed(1) + '%' : Math.round(v).toLocaleString('ko-KR');
+      tbody += '<td>' + txt + '</td>';
+    });
+    tbody += '</tr>';
+  });
+  tbody += '</tbody>';
+  document.getElementById('pa_table').innerHTML = thead + tbody;
+}
+
+function calcPA() {
+  const revenue = numVal(document.getElementById('pa_revenue'));
+  const invest  = numVal(document.getElementById('pa_invest'));
+  const wacc    = numVal(document.getElementById('pa_wacc'));
+  const taxRate = numVal(document.getElementById('pa_tax'));
+  const years   = Math.max(1, Math.round(numVal(document.getElementById('pa_years')) || 5));
+
+  const costItems = [...document.querySelectorAll('.pa-cost-row')].map(row => ({
+    name: row.querySelector('.pa-cost-name').value.trim(),
+    amt: numVal(row.querySelector('.pa-cost-amt')),
+  }));
+  const totalCost = costItems.reduce((s, c) => s + c.amt, 0);
+  const depItem = costItems.find(c => c.name.includes('감가상각'));
+  const dep = depItem ? depItem.amt : 0;
+
+  const r = wacc / 100;
+  const t = taxRate / 100;
+
+  const rows = { revenue: [], invest: [], cost: [], profit: [], cumProfit: [], margin: [], tax: [], afterTax: [], fcf: [], cumFCF: [], dcf: [], cumDCF: [] };
+  const fcfSeries = [];
+  let cumProfit = 0, cumFCF = 0, cumDCF = 0;
+
+  for (let y = 1; y <= years; y++) {
+    const inv = y === 1 ? invest : 0;
+    const profit = revenue - totalCost;
+    cumProfit += profit;
+    const margin = revenue > 0 ? (profit / revenue * 100) : 0;
+    const tax = Math.max(profit, 0) * t;
+    const afterTax = profit - tax;
+    const fcf = afterTax + dep - inv;
+    cumFCF += fcf;
+    const dcf = fcf / Math.pow(1 + r, y);
+    cumDCF += dcf;
+
+    rows.revenue.push(revenue); rows.invest.push(inv); rows.cost.push(totalCost);
+    rows.profit.push(profit); rows.cumProfit.push(cumProfit); rows.margin.push(margin);
+    rows.tax.push(tax); rows.afterTax.push(afterTax);
+    rows.fcf.push(fcf); rows.cumFCF.push(cumFCF);
+    rows.dcf.push(dcf); rows.cumDCF.push(cumDCF);
+    fcfSeries.push(fcf);
+  }
+
+  renderPATable(years, rows);
+
+  const irr = calcIRR(fcfSeries);
+  const bep = calcBEP(rows.cumFCF, invest);
+
+  document.getElementById('pa_npv').textContent = Math.round(cumDCF).toLocaleString('ko-KR') + '만원';
+  document.getElementById('pa_irr').textContent = irr === null ? '–' : (irr * 100).toFixed(1) + '%';
+  document.getElementById('pa_bep').textContent = bep === null ? (years + '년 이상') : bep.toFixed(1) + '년';
+
+  document.getElementById('pa_footnote').textContent = 'WACC ' + wacc + '% · 법인세율 ' + taxRate + '% 적용';
+}
+
+paInit();
 
 /* ══════════════════════════════
    PWA 서비스 워커 등록
