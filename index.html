@@ -277,15 +277,12 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 /* ── 수익성 분석 ── */
 .pa-tile .oa-title{margin-bottom:8px;}
 .pa-tile .oa-row{padding:6px 0;border-bottom:none;}
-.pa-sub-title{
-  font-size:11px;font-weight:700;color:var(--sub);
-  margin:12px 0 4px;padding-left:2px;
-}
-.oa-row-sub{display:flex;align-items:center;padding:4px 0 4px 10px;}
+.oa-row-sub{display:flex;align-items:center;padding:4px 0 4px 16px;}
 .oa-row-sub .oa-label{font-size:12px;color:var(--sub);}
 .oa-row-sub .oa-input{width:90px;font-size:13px;padding:4px 6px;}
 .oa-row-sub .oa-calc{width:110px;font-size:13px;padding:4px 6px;}
 .oa-row-sub .oa-unit{font-size:11px;}
+.pa-bullet{font-size:12px;color:var(--sub);flex-shrink:0;margin-right:4px;}
 
 .pa-commission-row{gap:4px;}
 .pa-commission-row .oa-label{flex:none;white-space:nowrap;}
@@ -307,12 +304,12 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .pa-table tr.pa-table-section:first-child td{padding-top:2px;}
 .pa-cost-row{
   display:flex;align-items:center;gap:6px;
-  padding:5px 0 5px 10px;
+  padding:5px 0 5px 16px;
 }
 .pa-cost-name{
   flex:1;min-width:0;
   background:var(--bg);border:1.5px solid var(--line);border-radius:8px;
-  padding:6px 8px;font-size:13px;color:var(--ink);
+  padding:6px 8px;font-size:12px;color:var(--sub);
 }
 .pa-cost-amt{
   width:100px;flex-shrink:0;text-align:right;
@@ -586,19 +583,20 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
           <span class="oa-unit">천원</span>
         </div>
         <div class="oa-row">
-          <span class="oa-label">비용</span>
+          <span class="oa-label">연간 비용</span>
           <span class="oa-calc" id="pa_totalcost">–</span>
           <span class="oa-unit">천원</span>
         </div>
       </div>
 
-      <div class="pa-sub-title">비용 항목</div>
       <div class="oa-row-sub">
+        <span class="pa-bullet">-</span>
         <span class="oa-label">감가상각비</span>
         <span class="oa-calc" id="pa_dep">–</span>
         <span class="oa-unit">천원</span>
       </div>
       <div class="oa-row-sub pa-commission-row">
+        <span class="pa-bullet">-</span>
         <span class="oa-label">영업수수료율</span>
         <input class="oa-input" id="pa_commission_rate" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);calcPA()">
         <span class="oa-unit">%</span>
@@ -1237,6 +1235,7 @@ function addCostItem(name, amount) {
   row.className = 'pa-cost-row';
   row.dataset.id = id;
   row.innerHTML =
+    '<span class="pa-bullet">-</span>' +
     '<input class="pa-cost-name" type="text" placeholder="비용 입력" value="' + (name || '') + '" oninput="calcPA()">' +
     '<input class="pa-cost-amt" type="text" inputmode="numeric" placeholder="0" value="' + (amount || '') + '" oninput="formatWithCommas(this,false);calcPA()">' +
     '<span class="pa-cost-unit">천원</span>';
