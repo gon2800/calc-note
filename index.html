@@ -1032,7 +1032,6 @@ const UNITS = {
     {k:'yd', label:'야드 (yd)',      base:0.9144},
     {k:'ft', label:'피트 (ft)',      base:0.3048},
     {k:'in', label:'인치 (in)',      base:0.0254},
-    {k:'nm', label:'해리 (nm)',      base:1852},
   ]},
   weight: { units: [
     {k:'kg',  label:'킬로그램 (kg)', base:1},
@@ -1040,21 +1039,16 @@ const UNITS = {
     {k:'lb',  label:'파운드 (lb)',   base:0.453592},
     {k:'oz',  label:'온스 (oz)',     base:0.0283495},
     {k:'t',   label:'톤 (t)',        base:1000},
-    {k:'jin', label:'근 (斤)',       base:0.6},
   ]},
   area: { units: [
     {k:'m2',   label:'제곱미터 (m²)',   base:1},
     {k:'km2',  label:'제곱킬로미터',    base:1e6},
     {k:'cm2',  label:'제곱센티미터',    base:0.0001},
-    {k:'ha',   label:'헥타르 (ha)',     base:10000},
     {k:'py',   label:'평 (坪)',         base:3.30579},
-    {k:'acre', label:'에이커 (acre)',   base:4046.86},
-    {k:'ft2',  label:'제곱피트 (ft²)', base:0.0929},
   ]},
   temp: { units: [
     {k:'C', label:'섭씨 (°C)', base:null},
     {k:'F', label:'화씨 (°F)', base:null},
-    {k:'K', label:'켈빈 (K)',  base:null},
   ]},
   speed: { units: [
     {k:'mps', label:'m/s',       base:1},
@@ -1066,7 +1060,7 @@ const UNITS = {
 
 let curUnitType = 'length';
 let unitLast = 'from';
-const TEMP_TIP = '°F = °C×9/5+32  ·  K = °C+273.15';
+const TEMP_TIP = '°F = °C×9/5+32';
 
 function switchUnit(type, el) {
   curUnitType = type;
