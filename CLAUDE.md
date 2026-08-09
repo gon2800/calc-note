@@ -6,3 +6,6 @@
 
 ## 코드 스타일
 - 한국어 커밋 메시지 사용
+
+## 디자인
+- 새 기능 작성 시 https://raw.githubusercontent.com/gon2800/design/main/DESIGN.md 를 curl로 읽고 디자인 스타일을 맞출 것
