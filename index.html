@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="계산 노트">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <title>My Calculator</title>
 <style>
 :root{
@@ -337,9 +338,6 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .pa-summary-card .result-val{font-size:16px;}
 
 .hidden{display:none;}
-
-/* ── 아이콘 폰트 ── */
-@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css');
 </style>
 </head>
 <body>
@@ -788,6 +786,14 @@ function colorExpr(s) {
   return s.replace(/([÷×−+])/g, '<span class="op">$1</span>');
 }
 
+// 수식 내 숫자에 천 단위 콤마 삽입 (표시 전용)
+function commaExpr(s) {
+  return String(s).replace(/(\d[\d,]*)(\.\d*)?/g, (_, intp, dec) => {
+    const fi = intp.replace(/,/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return fi + (dec || '');
+  });
+}
+
 function tryEval(expr) {
   try {
     const e = expr.replace(/,/g,'').replace(/÷/g,'/').replace(/×/g,'*').replace(/−/g,'-');
@@ -882,14 +888,14 @@ function renderCalc() {
   const sep  = document.getElementById('historySep');
   if (calcHist.length > 0) {
     hEl.innerHTML = calcHist.map((h,i) =>
-      `<div class="history-line" onclick="useHist(${i})">${h.expr} = ${h.result}</div>`
+      `<div class="history-line" onclick="useHist(${i})">${commaExpr(h.expr)} = ${h.result}</div>`
     ).join('');
     sep.style.display = 'block';
   } else { hEl.innerHTML = ''; sep.style.display = 'none'; }
 
   // 수식 표시
   document.getElementById('calcExpr').innerHTML =
-    colorExpr(evaled ? curDisp : (curExpr || '0'));
+    colorExpr(commaExpr(evaled ? curDisp : (curExpr || '0')));
 
   // 실시간 미리보기
   let preview = '';
