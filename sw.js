@@ -1,6 +1,6 @@
 // 배포 때마다 이 버전을 올리면 이전 캐시가 자동 정리되고 새 자산이 재설치됩니다.
 // v47: cache-first → network-first 전환 (배포 후 수동 캐시 삭제 없이 즉시 반영)
-const CACHE_NAME = 'calc-note-v47';
+const CACHE_NAME = 'calc-note-v48';
 
 // network-first: 배포마다 바뀔 수 있는 앱 셸 / 코드
 const APP_SHELL = [
