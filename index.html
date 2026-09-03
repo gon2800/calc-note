@@ -85,7 +85,6 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .tab-item:last-child.active::after{content:none;}
 .tab-item:first-child.active{border-top-left-radius:var(--radius);}
 .tab-item:last-child.active{border-top-right-radius:var(--radius);}
-.tab-item .ti{display:block;font-size:19px;margin-bottom:3px;}
 
 /* ── 스크린 / 탭 카드 ── */
 .screens{position:relative;flex:1;overflow:hidden;}
@@ -140,7 +139,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .btn-op{background:var(--accent-soft);color:var(--accent);font-size:24px;font-weight:700;}
 .btn-eq{background:var(--accent);color:#fff;font-size:26px;}
 .btn-clear{background:var(--danger-soft);color:var(--danger);font-size:20px;font-weight:700;}
-.btn-back{background:transparent;border:none;color:var(--ink);font-size:26px;}
+.btn-back{background:transparent;border:none;color:var(--ink);font-size:34px;}
 .calc-keypad-card{padding-top:8px;}
 
 /* ══════════════════════════════
@@ -167,6 +166,10 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   cursor:pointer;display:flex;align-items:center;
   justify-content:center;color:var(--accent);font-size:20px;
 }
+/* 스왑 버튼을 통화/단위 선택(아이콘) 열의 수직 중심선에 맞춤 */
+.swap-row{display:flex;gap:8px;align-items:center;padding:2px 0;}
+.swap-row .swap-slot{flex:1;min-width:0;display:flex;justify-content:center;}
+.swap-row .swap-spacer{flex:1.5;min-width:0;}
 .rate-info{font-size:11px;color:var(--sub);text-align:right;margin-top:6px;}
 .quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
 .quick-card{
@@ -353,21 +356,11 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 
   <!-- 탭바 -->
   <div class="tab-bar">
-    <div class="tab-item active" onclick="switchTab('calc')">
-      <i class="ti ti-calculator"></i>계산기
-    </div>
-    <div class="tab-item" onclick="switchTab('fx')">
-      <i class="ti ti-currency-dollar"></i>환율
-    </div>
-    <div class="tab-item" onclick="switchTab('unit')">
-      <i class="ti ti-ruler"></i>단위
-    </div>
-    <div class="tab-item" onclick="switchTab('age')">
-      <i class="ti ti-cake"></i>나이
-    </div>
-    <div class="tab-item" onclick="switchTab('oa')">
-      <i class="ti ti-ad-2"></i>옥외광고
-    </div>
+    <div class="tab-item active" onclick="switchTab('calc')">계산기</div>
+    <div class="tab-item" onclick="switchTab('fx')">환율</div>
+    <div class="tab-item" onclick="switchTab('unit')">단위</div>
+    <div class="tab-item" onclick="switchTab('age')">나이</div>
+    <div class="tab-item" onclick="switchTab('oa')">옥외광고</div>
   </div>
 
   <div class="screens">
@@ -383,7 +376,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
    </div>
    <div class="tab-card calc-keypad-card">
     <div class="calc-back-row">
-      <button class="btn btn-back"   onclick="ci('⌫')"><i class="ti ti-backspace"></i></button>
+      <button class="btn btn-back" id="btnBack" onclick="ci('⌫')"><i class="ti ti-backspace-filled"></i></button>
     </div>
     <div class="calc-grid">
       <button class="btn btn-clear"  onclick="ci('C')">C</button>
@@ -429,10 +422,13 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
           <input class="rate-input" id="fromVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX('from')">
         </div>
       </div>
-      <div style="text-align:center;">
-        <button class="rate-swap" onclick="swapFX()">
-          <i class="ti ti-arrows-up-down"></i>
-        </button>
+      <div class="swap-row">
+        <div class="swap-slot">
+          <button class="rate-swap" onclick="swapFX()">
+            <i class="ti ti-arrows-up-down"></i>
+          </button>
+        </div>
+        <div class="swap-spacer"></div>
       </div>
       <div class="rate-group">
         <div class="rate-row">
@@ -469,10 +465,13 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
         <input class="unit-val" id="fromUnitVal" type="text" inputmode="decimal" placeholder="0"
           oninput="convertUnit('from')">
       </div>
-      <div style="text-align:center;">
-        <button class="rate-swap" onclick="swapUnit()">
-          <i class="ti ti-arrows-up-down"></i>
-        </button>
+      <div class="swap-row">
+        <div class="swap-slot">
+          <button class="rate-swap" onclick="swapUnit()">
+            <i class="ti ti-arrows-up-down"></i>
+          </button>
+        </div>
+        <div class="swap-spacer"></div>
       </div>
       <div class="unit-row">
         <select class="unit-select" id="toUnit" onchange="convertUnit()"></select>
@@ -914,6 +913,55 @@ function useHist(i) {
 }
 
 renderCalc();
+
+/* 백스페이스 롱프레스 → 전체 초기화(C) */
+(function initBackLongPress() {
+  const btn = document.getElementById('btnBack');
+  if (!btn) return;
+  let timer = null, longFired = false;
+  const startPress = () => {
+    clearTimeout(timer);
+    longFired = false;
+    timer = setTimeout(() => {
+      longFired = true;
+      if (navigator.vibrate) navigator.vibrate(25);
+      ci('C');
+    }, 500);
+  };
+  const endPress = () => { clearTimeout(timer); timer = null; };
+  btn.addEventListener('touchstart', startPress, { passive: true });
+  btn.addEventListener('touchend', endPress);
+  btn.addEventListener('touchcancel', endPress);
+  btn.addEventListener('mousedown', startPress);
+  btn.addEventListener('mouseup', endPress);
+  btn.addEventListener('mouseleave', endPress);
+  // 롱프레스가 발동되면 뒤이어 발생하는 click(=백스페이스 1회)을 취소
+  btn.addEventListener('click', e => {
+    if (longFired) { e.preventDefault(); e.stopImmediatePropagation(); longFired = false; }
+  }, true);
+})();
+
+/* 환율·단위·옥외광고 숫자 입력칸: 포커스 시 기존 값 전체 선택 */
+(function initSelectAllOnFocus() {
+  const SEL = '#screen-fx .rate-input, #screen-unit .unit-val, #screen-oa .oa-input, #screen-oa .pa-cost-amt';
+  let armed = null;
+  document.addEventListener('focusin', e => {
+    const el = e.target;
+    if (!el.matches || !el.matches(SEL)) return;
+    armed = el;
+    setTimeout(() => {
+      if (document.activeElement === el) {
+        try { el.select(); el.setSelectionRange(0, el.value.length); } catch (_) {}
+      }
+    }, 0);
+  });
+  // 첫 포커스 직후의 mouseup/tap이 선택을 해제하는 것을 막는다
+  document.addEventListener('mouseup', e => {
+    if (armed && e.target === armed) { e.preventDefault(); }
+    armed = null;
+  }, true);
+  document.addEventListener('focusout', () => { armed = null; });
+})();
 
 /* ══════════════════════════════
    숫자 입력 천단위 콤마
