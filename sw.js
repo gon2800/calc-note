@@ -4,7 +4,10 @@
 //      리다이렉트하는데, redirected 응답을 cache.addAll()에 넘기면 TypeError로 install
 //      전체가 실패한다(→ 새 SW가 영영 활성화되지 않음). '/'만 precache하고, 각 URL을
 //      개별 fetch → 상태 확인 후 put하여 하나가 실패해도 install이 죽지 않도록 한다.
-const CACHE_NAME = 'calc-note-v49';
+// v50: 모바일 UX 수정 — 옥외광고 상세표 좌우 스크롤과 탭 스와이프 충돌 해소
+//      (touch-action pan-x pan-y + 스와이프 핸들러가 .pa-table-scroll 무시),
+//      당겨서 새로고침 시 입력값 유실 방지(overscroll-behavior:contain).
+const CACHE_NAME = 'calc-note-v50';
 
 // network-first: 배포마다 바뀔 수 있는 앱 셸 / 코드
 // '/index.html'은 넣지 않는다 — Cloudflare Pages가 '/'로 308 리다이렉트하므로
