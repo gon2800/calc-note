@@ -20,11 +20,11 @@
 }
 .divider{border:none;border-top:2px solid var(--line-strong);margin:16px 0;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-/* 텍스트 선택 하이라이트: 모바일에서도 블록 선택이 또렷하게 보이도록 명시 (--accent 5B54E8) */
-::selection{background:rgba(91,84,232,.25);color:var(--ink);}
-::-moz-selection{background:rgba(91,84,232,.25);color:var(--ink);}
-.rate-input::selection,.unit-val::selection,.oa-input::selection,.pa-cost-amt::selection{background:rgba(91,84,232,.30);color:var(--ink);}
-.rate-input::-moz-selection,.unit-val::-moz-selection,.oa-input::-moz-selection,.pa-cost-amt::-moz-selection{background:rgba(91,84,232,.30);color:var(--ink);}
+/* 텍스트 선택 하이라이트: 모바일에서도 블록 선택이 또렷하게 보이도록 명시 (--accent 참조) */
+::selection{background:color-mix(in srgb, var(--accent) 25%, transparent);color:var(--ink);}
+::-moz-selection{background:color-mix(in srgb, var(--accent) 25%, transparent);color:var(--ink);}
+.rate-input::selection,.unit-val::selection,.oa-input::selection,.pa-cost-amt::selection{background:color-mix(in srgb, var(--accent) 30%, transparent);color:var(--ink);}
+.rate-input::-moz-selection,.unit-val::-moz-selection,.oa-input::-moz-selection,.pa-cost-amt::-moz-selection{background:color-mix(in srgb, var(--accent) 30%, transparent);color:var(--ink);}
 html,body{height:100%;background:var(--bg);overscroll-behavior-y:contain;}
 body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;display:flex;justify-content:center;align-items:flex-start;background:var(--bg);color:var(--ink);}
 
@@ -65,7 +65,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
   flex:1;min-width:54px;
   padding:10px 2px 9px;
   text-align:center;
-  font-size:13px;
+  font-size:14px;
   font-weight:700;
   color:var(--sub);
   background:transparent;
@@ -160,7 +160,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .rate-input{
   flex:1.5;min-width:0;width:0;height:40px;border-radius:10px;
   border:2px solid var(--accent);padding:0 10px;
-  font-size:18px;font-weight:500;
+  font-size:15px;font-weight:500;
   background:var(--card);color:var(--ink);text-align:right;
 }
 .rate-swap{
@@ -177,7 +177,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .rate-info{font-size:11px;color:var(--sub);text-align:right;margin-top:6px;}
 .quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
 .quick-card{
-  background:var(--bg);border-radius:12px;
+  background:var(--bg);border-radius:var(--radius);
   padding:10px 12px;cursor:pointer;
 }
 .quick-card:active{background:var(--accent-soft);}
@@ -203,7 +203,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .unit-val{
   flex:1.5;min-width:0;width:0;height:40px;border-radius:10px;
   border:2px solid var(--accent);padding:0 10px;
-  font-size:18px;font-weight:500;
+  font-size:15px;font-weight:500;
   background:var(--card);color:var(--ink);text-align:right;
 }
 .unit-eq-text{font-size:11px;color:var(--sub);text-align:right;margin-top:6px;}
@@ -229,7 +229,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .age-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 #retireResults{margin-top:10px;}
 .age-result-card{
-  background:var(--bg);border-radius:12px;
+  background:var(--bg);border-radius:var(--radius);
   padding:12px;
 }
 .result-label{font-size:11px;color:var(--sub);margin-bottom:4px;}
@@ -237,7 +237,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .result-val.small{font-size:17px;}
 .result-sub{font-size:11px;color:var(--sub);margin-top:2px;}
 .age-detail{
-  background:var(--bg);border-radius:12px;
+  background:var(--bg);border-radius:var(--radius);
   padding:12px;margin-top:10px;
 }
 .detail-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:2px solid var(--line-strong);}
@@ -267,7 +267,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .oa-unit{font-size:12px;color:var(--sub);width:30px;text-align:right;margin-left:4px;flex-shrink:0;}
 .oa-input{
   width:130px;text-align:right;
-  background:var(--accent-soft);border:2px solid var(--accent);
+  background:var(--card);border:2px solid var(--accent);
   border-radius:10px;padding:5px 8px;
   font-size:15px;color:var(--ink);font-weight:600;
 }
@@ -340,7 +340,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .pa-download-btn:active{background:var(--accent-dark);}
 .pa-download-btn:disabled{opacity:.6;cursor:default;}
 .pa-summary-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px;}
-.pa-summary-card{background:var(--bg);border-radius:12px;padding:10px 6px;text-align:center;}
+.pa-summary-card{background:var(--bg);border-radius:var(--radius);padding:10px 6px;text-align:center;}
 .pa-summary-card .result-label{margin-bottom:6px;}
 .pa-summary-card .result-val{font-size:16px;}
 
@@ -533,7 +533,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
           <div class="detail-row"><span class="k">태어난 지</span><span class="v" id="ageDays">–</span></div>
           <div class="detail-row"><span class="k">다음 생일까지</span><span class="v" id="ageNextBday">–</span></div>
         </div>
-        <button class="more-btn" id="moreBtn" onclick="toggleMore()">더 보기 ▾</button>
+        <button class="more-btn" id="moreBtn" onclick="toggleMore()">더 보기 <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg></button>
         <div class="age-results" id="retireResults" style="display:none;">
           <div class="age-result-card">
             <div class="result-label">60세 퇴직일</div>
@@ -641,7 +641,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
         </div>
       </div>
 
-      <button class="more-btn" id="paMoreBtn" onclick="paToggleDetail()">펼쳐보기 ▾</button>
+      <button class="more-btn" id="paMoreBtn" onclick="paToggleDetail()">펼쳐보기 <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg></button>
       <div class="pa-detail hidden" id="pa_detail_wrap">
         <div class="pa-table-scroll" id="pa_detail_table"></div>
         <button class="pa-download-btn" id="pa_download_btn" onclick="downloadPAExcel()" type="button"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M8 11h8v7h-8z"/><path d="M8 15h8"/><path d="M11 11v7"/></svg>엑셀로 내려받기</button>
@@ -656,6 +656,10 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 
 <script>
 'use strict';
+
+/* 펼침/접힘 표시용 셰브런 아이콘 (Tabler Icons, MIT). .svg-icon 패턴과 통일 */
+const CHEVRON_DOWN = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>';
+const CHEVRON_UP   = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>';
 
 /* ══════════════════════════════
    탭 전환
@@ -718,7 +722,7 @@ function switchTab(t) {
   const SWIPE_MIN_X    = 50;
   const SWIPE_MAX_Y    = 80;
   const SWIPE_MAX_TIME = 600;
-  const INTENT_THRESHOLD = 10; // 이 정도 움직이기 전까지는 탭/스크롤로 간주
+  const INTENT_THRESHOLD = 35; // 이 정도 움직이기 전까지는 탭/스크롤로 간주 (엄지 오탭·시스템 뒤로가기 제스처 충돌 완화)
   let startX = 0, startY = 0, startT = 0, lastX = 0, lastY = 0, tracking = false, swiping = false;
 
   function resolveSwipe(dx, dy, dt) {
@@ -1282,7 +1286,7 @@ let moreShown = false;
 function toggleMore() {
   moreShown = !moreShown;
   document.getElementById('retireResults').style.display = moreShown ? 'grid' : 'none';
-  document.getElementById('moreBtn').textContent = moreShown ? '접기 ▴' : '더 보기 ▾';
+  document.getElementById('moreBtn').innerHTML = moreShown ? '접기 ' + CHEVRON_UP : '더 보기 ' + CHEVRON_DOWN;
 }
 
 /* ══════════════════════════════
@@ -1407,10 +1411,25 @@ function renderPADetail(d) {
 }
 
 let paDetailShown = false;
+let paDetailTimer = null;
+
 function paToggleDetail() {
   paDetailShown = !paDetailShown;
   document.getElementById('pa_detail_wrap').classList.toggle('hidden', !paDetailShown);
-  document.getElementById('paMoreBtn').textContent = paDetailShown ? '접기 ▴' : '펼쳐보기 ▾';
+  document.getElementById('paMoreBtn').innerHTML =
+    paDetailShown ? '접기 ' + CHEVRON_UP : '펼쳐보기 ' + CHEVRON_DOWN;
+  // 접힌 상태에선 상세표를 갱신하지 않으므로, 펼치는 순간 최신값으로 1회 렌더한다.
+  if (paDetailShown && paLastData) renderPADetail(paLastData);
+}
+
+// 상세표(약 18행×7열)는 접힌 상태에선 재생성을 건너뛰고,
+// 펼쳐진 동안에는 타이핑이 멈춘 뒤에만 다시 그린다(디바운스).
+function schedulePADetail() {
+  if (!paDetailShown) return;
+  clearTimeout(paDetailTimer);
+  paDetailTimer = setTimeout(() => {
+    if (paDetailShown && paLastData) renderPADetail(paLastData);
+  }, 200);
 }
 
 function calcPA() {
@@ -1469,7 +1488,7 @@ function calcPA() {
     revenue, invest, dep, commissionAmt, commissionRate, costItems, totalCost,
     profit, tax, afterTax, fcfArr, cumFCFArr, dcfArr, cumDCFArr
   };
-  renderPADetail(paLastData);
+  schedulePADetail();
 }
 
 paInit();

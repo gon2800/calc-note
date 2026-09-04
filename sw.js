@@ -10,7 +10,11 @@
 // v51: perf — Tabler 웹폰트(1MB+ cross-origin) 제거하고 아이콘 5종 SVG 인라인화,
 //      앱 아이콘 재압축(icon-192 432KB→11KB, icon-512 505KB→84KB) 및
 //      any/maskable 분리(icon-*-maskable.png 추가).
-const CACHE_NAME = 'calc-note-v51';
+// v52: design-check/perf/mobile-ux 잔여 항목 — theme_color 통일(#F5F6FB),
+//      탭/입력창 폰트 규격화, ▾/▴ 기호를 SVG 셰브런으로 교체, ::selection·서브카드
+//      radius 토큰화, .oa-input 배경 --card, 스와이프 임계 10→35px,
+//      수익성 상세표 디바운스(접힘 시 재생성 스킵).
+const CACHE_NAME = 'calc-note-v52';
 
 // network-first: 배포마다 바뀔 수 있는 앱 셸 / 코드
 // '/index.html'은 넣지 않는다 — Cloudflare Pages가 '/'로 308 리다이렉트하므로
