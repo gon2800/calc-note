@@ -9,7 +9,6 @@
 <meta name="apple-mobile-web-app-title" content="계산 노트">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
 <title>My Calculator</title>
 <style>
 :root{
@@ -346,6 +345,15 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
 .pa-summary-card .result-val{font-size:16px;}
 
 .hidden{display:none;}
+
+/* 인라인 SVG 아이콘 (Tabler Icons, MIT). currentColor로 버튼 색을 따라감 */
+.svg-icon{
+  width:1em;height:1em;flex-shrink:0;
+  display:inline-block;vertical-align:-.125em;
+  fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.svg-icon.is-filled{fill:currentColor;stroke:none;}
 </style>
 </head>
 <body>
@@ -381,7 +389,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
    </div>
    <div class="tab-card calc-keypad-card">
     <div class="calc-back-row">
-      <button class="btn btn-back" id="btnBack" onclick="ci('⌫')"><i class="ti ti-backspace-filled"></i></button>
+      <button class="btn btn-back" id="btnBack" onclick="ci('⌫')"><svg class="svg-icon is-filled" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 5a2 2 0 0 1 1.995 1.85l.005 .15v10a2 2 0 0 1 -1.85 1.995l-.15 .005h-11a1 1 0 0 1 -.608 -.206l-.1 -.087l-5.037 -5.04c-.809 -.904 -.847 -2.25 -.083 -3.23l.12 -.144l5 -5a1 1 0 0 1 .577 -.284l.131 -.009h11zm-7.489 4.14a1 1 0 0 0 -1.301 1.473l.083 .094l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.403 1.403l.094 -.083l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.403 -1.403l-.083 -.094l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.403 -1.403l-.094 .083l-1.293 1.292l-1.293 -1.292l-.094 -.083l-.102 -.07z"/></svg></button>
     </div>
     <div class="calc-grid">
       <button class="btn btn-clear"  onclick="ci('C')">C</button>
@@ -430,7 +438,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
       <div class="swap-row">
         <div class="swap-slot">
           <button class="rate-swap" onclick="swapFX()">
-            <i class="ti ti-arrows-up-down"></i>
+            <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3l0 18"/><path d="M10 6l-3 -3l-3 3"/><path d="M20 18l-3 3l-3 -3"/><path d="M17 21l0 -18"/></svg>
           </button>
         </div>
         <div class="swap-spacer"></div>
@@ -473,7 +481,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
       <div class="swap-row">
         <div class="swap-slot">
           <button class="rate-swap" onclick="swapUnit()">
-            <i class="ti ti-arrows-up-down"></i>
+            <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3l0 18"/><path d="M10 6l-3 -3l-3 3"/><path d="M20 18l-3 3l-3 -3"/><path d="M17 21l0 -18"/></svg>
           </button>
         </div>
         <div class="swap-spacer"></div>
@@ -610,13 +618,13 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
         <span class="oa-label">영업수수료율</span>
         <input class="oa-input" id="pa_commission_rate" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);calcPA()">
         <span class="oa-unit">%</span>
-        <i class="ti ti-arrow-narrow-right pa-arrow"></i>
+        <svg class="svg-icon pa-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l14 0"/><path d="M15 16l4 -4"/><path d="M15 8l4 4"/></svg>
         <span class="oa-label">영업수수료</span>
         <span class="oa-calc" id="pa_commission_amt">–</span>
         <span class="oa-unit">천원</span>
       </div>
       <div id="pa_costList"></div>
-      <button class="pa-add-btn" onclick="addCostItem('','')" type="button"><i class="ti ti-plus"></i>항목 추가</button>
+      <button class="pa-add-btn" onclick="addCostItem('','')" type="button"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>항목 추가</button>
 
       <div class="pa-summary-grid">
         <div class="pa-summary-card">
@@ -636,7 +644,7 @@ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Goth
       <button class="more-btn" id="paMoreBtn" onclick="paToggleDetail()">펼쳐보기 ▾</button>
       <div class="pa-detail hidden" id="pa_detail_wrap">
         <div class="pa-table-scroll" id="pa_detail_table"></div>
-        <button class="pa-download-btn" id="pa_download_btn" onclick="downloadPAExcel()" type="button"><i class="ti ti-file-spreadsheet"></i>엑셀로 내려받기</button>
+        <button class="pa-download-btn" id="pa_download_btn" onclick="downloadPAExcel()" type="button"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M8 11h8v7h-8z"/><path d="M8 15h8"/><path d="M11 11v7"/></svg>엑셀로 내려받기</button>
       </div>
 
       <div class="oa-footnote">WACC 9.16% · 법인세율 24.2% · 분석기간 5년 적용</div>

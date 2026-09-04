@@ -7,7 +7,10 @@
 // v50: 모바일 UX 수정 — 옥외광고 상세표 좌우 스크롤과 탭 스와이프 충돌 해소
 //      (touch-action pan-x pan-y + 스와이프 핸들러가 .pa-table-scroll 무시),
 //      당겨서 새로고침 시 입력값 유실 방지(overscroll-behavior:contain).
-const CACHE_NAME = 'calc-note-v50';
+// v51: perf — Tabler 웹폰트(1MB+ cross-origin) 제거하고 아이콘 5종 SVG 인라인화,
+//      앱 아이콘 재압축(icon-192 432KB→11KB, icon-512 505KB→84KB) 및
+//      any/maskable 분리(icon-*-maskable.png 추가).
+const CACHE_NAME = 'calc-note-v51';
 
 // network-first: 배포마다 바뀔 수 있는 앱 셸 / 코드
 // '/index.html'은 넣지 않는다 — Cloudflare Pages가 '/'로 308 리다이렉트하므로
@@ -21,6 +24,8 @@ const APP_SHELL = [
 const STATIC_ASSETS = [
   '/icons/icon-192.png',
   '/icons/icon-512.png',
+  '/icons/icon-192-maskable.png',
+  '/icons/icon-512-maskable.png',
 ];
 
 // cache.addAll()은 URL 하나라도 실패하면(예: 308 리다이렉트, 404) 전체가 reject되어
