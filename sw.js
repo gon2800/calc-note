@@ -14,7 +14,9 @@
 //      탭/입력창 폰트 규격화, ▾/▴ 기호를 SVG 셰브런으로 교체, ::selection·서브카드
 //      radius 토큰화, .oa-input 배경 --card, 스와이프 임계 10→35px,
 //      수익성 상세표 디바운스(접힘 시 재생성 스킵).
-const CACHE_NAME = 'calc-note-v52';
+// v53: 앱 아이콘 새 세트로 교체(icon-192/512, favicon-32). maskable 별도 파일 제거 →
+//      manifest는 192(any)·512(any maskable) 2개, precache 목록에서 maskable 항목 삭제.
+const CACHE_NAME = 'calc-note-v53';
 
 // network-first: 배포마다 바뀔 수 있는 앱 셸 / 코드
 // '/index.html'은 넣지 않는다 — Cloudflare Pages가 '/'로 308 리다이렉트하므로
@@ -28,8 +30,6 @@ const APP_SHELL = [
 const STATIC_ASSETS = [
   '/icons/icon-192.png',
   '/icons/icon-512.png',
-  '/icons/icon-192-maskable.png',
-  '/icons/icon-512-maskable.png',
 ];
 
 // cache.addAll()은 URL 하나라도 실패하면(예: 308 리다이렉트, 404) 전체가 reject되어
