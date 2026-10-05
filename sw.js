@@ -16,7 +16,8 @@
 //      수익성 상세표 디바운스(접힘 시 재생성 스킵).
 // v53: 앱 아이콘 새 세트로 교체(icon-192/512, favicon-32). maskable 별도 파일 제거 →
 //      manifest는 192(any)·512(any maskable) 2개, precache 목록에서 maskable 항목 삭제.
-const CACHE_NAME = 'calc-note-v53';
+// v54: 앱 이름 "계산 노트"/"My Calculator" → "My Calc" 통일(manifest, title, 헤더, alt, apple 메타).
+const CACHE_NAME = 'calc-note-v54';
 
 // network-first: 배포마다 바뀔 수 있는 앱 셸 / 코드
 // '/index.html'은 넣지 않는다 — Cloudflare Pages가 '/'로 308 리다이렉트하므로
