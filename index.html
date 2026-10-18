@@ -87,9 +87,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 
 /* ── 스크린 / 탭 카드 ── */
 .screens{position:relative;flex:1;overflow:hidden;}
-/* 버전 표시: 모든 탭 공통, 카드 아래. 값은 sw.js CACHE_NAME 번호와 함께 올린다 */
-.app-version{flex-shrink:0;text-align:center;font-size:var(--fs-xs);color:var(--sub);padding:8px 0 calc(16px + env(safe-area-inset-bottom));}
-.screen{display:none;padding:0 16px 10px;overflow-y:auto;position:absolute;top:0;left:0;width:100%;height:100%;touch-action:pan-x pan-y;overscroll-behavior:contain;}
+.screen{display:none;padding:0 16px calc(16px + env(safe-area-inset-bottom));overflow-y:auto;position:absolute;top:0;left:0;width:100%;height:100%;touch-action:pan-x pan-y;overscroll-behavior:contain;}
 .screen.active{display:block;}
 #app{overflow-x:hidden;}
 .tab-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;}
@@ -352,6 +350,32 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 
 .hidden{display:none;}
 
+/* ── 헤더 톱니 버튼 / 작은 아이콘 버튼 (DESIGN.md tokens.css) ── */
+.iconbtn{border:none;background:var(--card);width:40px;height:40px;border-radius:12px;margin-left:auto;
+  box-shadow:var(--shadow);color:var(--ink);font-size:20px;cursor:pointer;flex:0 0 auto;
+  position:relative;display:flex;align-items:center;justify-content:center;padding:0;}
+.iconbtn::after{content:"";position:absolute;inset:-2px;} /* 40 + 2×2 = 44px 누르는 영역 */
+.ibtn{position:relative;border:none;background:var(--ibtn-bg);width:var(--ibtn-size);height:var(--ibtn-size);
+  border-radius:var(--ibtn-radius);color:var(--ink);font-size:18px;cursor:pointer;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;padding:0;}
+.ibtn::after{content:"";position:absolute;inset:-6px;} /* 32 + 6×2 = 44px 누르는 영역 */
+
+/* ── 설정 시트 (DESIGN.md sheet.css) ── */
+.backdrop{position:fixed;inset:0;background:rgba(20,22,35,.4);opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;}
+.backdrop.show{opacity:1;pointer-events:auto;}
+/* 닫힌 시트는 그림자를 숨겨 화면 아래 어두운 띠가 생기지 않게 한다 */
+.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--card);
+  border-radius:24px 24px 0 0;padding:var(--sp-1) var(--sp-3) calc(var(--sp-3) + env(safe-area-inset-bottom));
+  transform:translateY(100%);transition:transform .25s cubic-bezier(.32,.72,0,1),box-shadow .25s;z-index:21;
+  max-width:520px;margin:0 auto;box-shadow:0 0 0 rgba(31,36,55,0);}
+.sheet.show{transform:translateY(0);box-shadow:0 -8px 40px rgba(31,36,55,.15);}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;margin:var(--sp-1) 0 var(--sp-2);}
+.sheet-title{font-size:var(--fs-md);font-weight:700;letter-spacing:-.3px;}
+.set{max-height:92vh;overflow-y:auto;}
+.set .grp{font-size:var(--fs-xs);font-weight:700;color:var(--sub);margin:var(--sp-2) 4px var(--sp-1);}
+.set .grp:first-of-type{margin-top:0;}
+.set .ver{margin-top:var(--sp-2);font-size:var(--fs-xs);color:var(--sub);text-align:center;}
+
 /* 인라인 SVG 아이콘 (Lucide). currentColor로 버튼 색을 따라감 */
 .ico{
   width:1em;height:1em;flex-shrink:0;
@@ -370,6 +394,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
       <img src="/icons/icon-192.png" alt="My Calc">
     </div>
     <span class="header-title">My Calc</span>
+    <button class="iconbtn" id="menuBtn" aria-label="설정"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
   </div>
 
   <!-- 탭바 -->
@@ -657,10 +682,51 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
   </div>
   </div><!-- .screens -->
 
-  <!-- 버전: sw.js의 CACHE_NAME을 올릴 때 이 표시도 같이 올린다 (예: v59 → v60 배포 시 1.1.0 → 1.1.1) -->
-  <div class="app-version">My Calc v1.1.0</div>
-
 </div><!-- #app -->
+
+<!-- 설정 시트 (열기/닫기는 back.js의 ovOpen/ovClose) -->
+<div class="backdrop" id="setBd"></div>
+<div class="sheet set" id="setSheet" role="dialog" aria-label="설정">
+  <div class="sheet-head">
+    <div class="sheet-title">설정</div>
+    <button class="ibtn" id="setClose" aria-label="닫기"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+  </div>
+  <div class="grp">정보</div>
+  <!-- 버전: sw.js의 CACHE_NAME을 올릴 때 이 표시도 같이 올린다 (v61 = 1.2.0) -->
+  <div class="ver">My Calc v1.2.0</div>
+</div>
+
+<script>
+/* back.js — 폰 뒤로가기는 열린 창만 닫는다 (gon2800/design snippets/back.js) */
+const ovStack=[]; let ovAfter=null;
+function ovOpen(id,show,hide,keep){
+  if(ovStack.some(o=>o.id===id)) return;
+  show(); ovStack.push({id,hide,keep,closing:false}); history.pushState({ov:id},"");
+}
+function ovClose(id){
+  const t=ovStack[ovStack.length-1];
+  if(t&&t.id===id){ if(!t.closing){ t.closing=true; history.back(); } return; }
+  const i=ovStack.findIndex(o=>o.id===id);
+  if(i>=0){ ovStack[i].hide(); ovStack.splice(i,1); }
+}
+window.addEventListener("popstate",()=>{
+  const t=ovStack[ovStack.length-1];
+  if(!t) return;
+  if(t.keep&&t.keep()){ t.closing=false; history.pushState({ov:t.id},""); return; }
+  ovStack.pop(); t.hide();
+  const f=ovAfter; ovAfter=null; if(f) f();
+});
+if(history.state&&history.state.ov) history.replaceState(null,"");
+
+const setBd=document.getElementById("setBd"), setSheet=document.getElementById("setSheet");
+function hideSettings(){ setBd.classList.remove("show"); setSheet.classList.remove("show"); }
+function closeSettings(){ ovClose("settings"); }
+document.getElementById("menuBtn").onclick=()=>{
+  ovOpen("settings",()=>{ setBd.classList.add("show"); setSheet.classList.add("show"); },hideSettings);
+};
+setBd.onclick=closeSettings;
+document.getElementById("setClose").onclick=closeSettings;
+</script>
 
 <script>
 'use strict';
