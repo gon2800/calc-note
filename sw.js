@@ -19,7 +19,9 @@
 // v54: 앱 이름 "계산 노트"/"My Calculator" → "My Calc" 통일(manifest, title, 헤더, alt, apple 메타).
 // v55: 디자인 1단계 — Pretendard 글꼴용 별도 캐시(FONT_CACHE) 추가(앱 캐시 정리 때 보존).
 //      화면 폭 520px, 여백·간격·그림자·입력칸 모서리 규칙값 적용.
-const CACHE_NAME = 'calc-note-v59';
+// v60: 디자인 3단계 — 캡슐 탭·단위 칩, 지우기 아이콘 40x29 가운데 정렬, 카드 제목 15px, 하단 버전 표시(My Calc v1.1.0).
+// ※ CACHE_NAME 번호를 올릴 때 index.html의 .app-version 표시도 같이 올릴 것 (v60 = 1.1.0).
+const CACHE_NAME = 'calc-note-v60';
 
 // 글꼴 전용 캐시: 앱 캐시 버전이 바뀌어도 유지된다 (이름의 -v1은 글꼴 자체를 바꿀 때만 올림).
 const FONT_CACHE = 'calc-note-fonts-v1';

@@ -61,55 +61,39 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .header-icon img{width:100%;height:100%;object-fit:cover;}
 .header-title{font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;}
 
-/* ── 탭바 (견출지 스타일: 활성 탭이 카드와 이어짐) ── */
+/* ── 탭바 (캡슐형: 연회색 알약 안에서 선택 칸만 흰색, DESIGN.md .seg) ── */
 .tab-bar{
   display:flex;
-  gap:0;
-  background:transparent;
-  padding:0 16px;
-  overflow-x:auto;
+  gap:2px;
+  margin:0 16px 8px;
+  padding:2px;
+  background:#EEF0F5;
+  border-radius:12px;
   flex-shrink:0;
 }
-.tab-bar::-webkit-scrollbar{display:none;}
 .tab-item{
-  position:relative;
-  flex:1;min-width:54px;
-  padding:10px 2px 9px;
+  flex:1;min-width:0;
+  height:32px;line-height:32px;
   text-align:center;
-  font-size:14px;
+  font-size:13px;
   font-weight:700;
   color:var(--sub);
-  background:transparent;
+  border-radius:10px;
   cursor:pointer;
-  border-radius:8px 8px 0 0;
   white-space:nowrap;
   user-select:none;
 }
-.tab-item.active{background:var(--card);color:var(--accent);font-weight:800;border-bottom:1px solid var(--card);margin-bottom:-1px;}
-.tab-item.active::before,
-.tab-item.active::after{
-  content:"";
-  position:absolute;
-  bottom:0;
-  width:8px;height:8px;
-  pointer-events:none;
-}
-.tab-item.active::before{left:-8px;background:radial-gradient(circle at top left, transparent 8px, var(--card) 8px);}
-.tab-item.active::after{right:-8px;background:radial-gradient(circle at top right, transparent 8px, var(--card) 8px);}
-.tab-item:first-child.active::before{content:none;}
-.tab-item:last-child.active::after{content:none;}
-.tab-item:first-child.active{border-top-left-radius:var(--radius);}
-.tab-item:last-child.active{border-top-right-radius:var(--radius);}
+.tab-item.active{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(31,36,55,.1);}
 
 /* ── 스크린 / 탭 카드 ── */
 .screens{position:relative;flex:1;overflow:hidden;}
+/* 버전 표시: 모든 탭 공통, 카드 아래. 값은 sw.js CACHE_NAME 번호와 함께 올린다 */
+.app-version{flex-shrink:0;text-align:center;font-size:var(--fs-xs);color:var(--sub);padding:8px 0 calc(16px + env(safe-area-inset-bottom));}
 .screen{display:none;padding:0 16px 10px;overflow-y:auto;position:absolute;top:0;left:0;width:100%;height:100%;touch-action:pan-x pan-y;overscroll-behavior:contain;}
 .screen.active{display:block;}
 #app{overflow-x:hidden;}
 .tab-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;}
 .tab-card + .tab-card{margin-top:8px;}
-.tab-card.corner-first{border-radius:0 var(--radius) var(--radius) var(--radius);}
-.tab-card.corner-last{border-radius:var(--radius) 0 var(--radius) var(--radius);}
 
 /* ══════════════════════════════
    계산기
@@ -158,9 +142,9 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .btn-op{background:var(--accent-soft);color:var(--accent);font-size:26px;font-weight:700;}
 .btn-eq{background:var(--accent);color:#fff;font-size:26px;}
 .btn-clear{background:var(--danger-soft);color:var(--danger);font-size:26px;font-weight:700;}
-.btn-back{background:transparent;border:none;width:56px;height:44px;justify-self:end;padding:0;transition:filter 0.08s;}
+.btn-back{background:transparent;border:none;width:100%;height:44px;padding:0;transition:filter 0.08s;} /* 4열 칸 전체가 누르는 영역, 아이콘은 칸 가운데 */
 .btn-back:active{transform:none;filter:brightness(0.8);}
-.back-ico{display:block;}
+.back-ico{display:block;margin:0 auto;}
 .ico-filled{fill:currentColor;stroke:none;}
 .calc-keypad-card{padding-top:8px;}
 
@@ -208,14 +192,13 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 /* ══════════════════════════════
    단위
 ══════════════════════════════ */
-.unit-tabs{display:flex;gap:4px;background:transparent;border-radius:12px;padding:4px;margin-top:0;}
+.unit-tabs{display:flex;gap:2px;background:#EEF0F5;border-radius:12px;padding:2px;margin-top:0;}
 .unit-tab{
-  flex:1;text-align:center;
-  padding:8px 4px;border-radius:9px;font-size:13px;font-weight:700;
-  border:2px solid var(--line);background:var(--card);
-  cursor:pointer;color:var(--sub);
+  flex:1;min-width:0;text-align:center;
+  height:32px;line-height:32px;border-radius:10px;font-size:13px;font-weight:700;
+  background:transparent;cursor:pointer;color:var(--sub);white-space:nowrap;
 }
-.unit-tab.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);}
+.unit-tab.active{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(31,36,55,.1);}
 .unit-row{display:flex;gap:8px;align-items:center;overflow:hidden;padding:4px 0;}
 .unit-select{
   flex:1;min-width:0;height:40px;border-radius:14px;
@@ -278,7 +261,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
    옥외광고
 ══════════════════════════════ */
 .oa-title{
-  font-size:13px;font-weight:800;color:var(--ink);
+  font-size:15px;font-weight:800;color:var(--ink);
   margin-bottom:10px;
 }
 .oa-row{
@@ -401,7 +384,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
   <div class="screens">
   <!-- ═══ 계산기 ═══ -->
   <div id="screen-calc" class="screen active">
-   <div class="tab-card corner-first">
+   <div class="tab-card">
     <div class="calc-display">
       <div class="calc-history" id="calcHistory"></div>
       <div class="history-sep" id="historySep" style="display:none"></div>
@@ -411,7 +394,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
    </div>
    <div class="tab-card calc-keypad-card">
     <div class="calc-back-row">
-      <button class="btn btn-back" id="btnBack" onclick="ci('⌫')"><svg class="back-ico" viewBox="0 0 56 40" width="56" height="40" aria-hidden="true"><path fill="#5B54E8" fill-rule="evenodd" d="M21 3H50a4 4 0 0 1 4 4V33a4 4 0 0 1-4 4H21a4 4 0 0 1-2.9-1.2L4.2 22.1a3 3 0 0 1 0-4.2L18.1 4.2A4 4 0 0 1 21 3ZM23.87 13.13 26.13 10.87 33 17.74 39.87 10.87 42.13 13.13 35.26 20 42.13 26.87 39.87 29.13 33 22.26 26.13 29.13 23.87 26.87 30.74 20Z"/></svg></button>
+      <button class="btn btn-back" id="btnBack" onclick="ci('⌫')"><svg class="back-ico" viewBox="0 0 56 40" width="40" height="29" aria-hidden="true"><path fill="#5B54E8" fill-rule="evenodd" d="M21 3H50a4 4 0 0 1 4 4V33a4 4 0 0 1-4 4H21a4 4 0 0 1-2.9-1.2L4.2 22.1a3 3 0 0 1 0-4.2L18.1 4.2A4 4 0 0 1 21 3ZM23.87 13.13 26.13 10.87 33 17.74 39.87 10.87 42.13 13.13 35.26 20 42.13 26.87 39.87 29.13 33 22.26 26.13 29.13 23.87 26.87 30.74 20Z"/></svg></button>
     </div>
     <div class="calc-grid">
       <button class="btn btn-clear"  onclick="ci('C')">C</button>
@@ -527,7 +510,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 
   <!-- ═══ 나이 ═══ -->
   <div id="screen-age" class="screen">
-   <div class="tab-card corner-first">
+   <div class="tab-card">
       <div class="date-input-row">
         <input class="date-input date-input-year" type="tel" id="birthYear" placeholder="YYYY" inputmode="numeric" maxlength="4" oninput="ageInputMove(this,'birthMonth',4)">
         <input class="date-input" type="tel" id="birthMonth" placeholder="MM" inputmode="numeric" maxlength="2" oninput="ageInputMove(this,'birthDay',2)">
@@ -674,6 +657,9 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
   </div>
   </div><!-- .screens -->
 
+  <!-- 버전: sw.js의 CACHE_NAME을 올릴 때 이 표시도 같이 올린다 (예: v59 → v60 배포 시 1.1.0 → 1.1.1) -->
+  <div class="app-version">My Calc v1.1.0</div>
+
 </div><!-- #app -->
 
 <script>
@@ -701,11 +687,6 @@ function switchTab(t) {
 
   document.querySelectorAll('.tab-item').forEach((el,i) =>
     el.classList.toggle('active', TABS[i] === t));
-  const card = newScreen.querySelector('.tab-card');
-  if (card) {
-    card.classList.toggle('corner-first', idx === 0);
-    card.classList.toggle('corner-last', idx === TABS.length - 1);
-  }
 
   tabSwitching = true;
   newScreen.style.transition = 'none';
