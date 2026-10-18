@@ -374,6 +374,16 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .set{max-height:92vh;overflow-y:auto;}
 .set .grp{font-size:var(--fs-xs);font-weight:700;color:var(--sub);margin:var(--sp-2) 4px var(--sp-1);}
 .set .grp:first-of-type{margin-top:0;}
+.set .cur-row{display:flex;align-items:center;gap:var(--sp-1);min-height:44px;padding:0 4px;border-bottom:1px solid var(--line);font-size:var(--fs-md);}
+.set .cur-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.set .cur-del{width:44px;height:44px;flex-shrink:0;border:none;border-radius:var(--ibtn-radius);background:var(--danger-soft);color:var(--danger);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;}
+.set .cur-del:disabled{opacity:.35;cursor:default;}
+.set .cur-add{width:100%;height:44px;margin-top:var(--sp-1);border:none;border-radius:12px;background:var(--accent-soft);color:var(--accent-ink);font-size:var(--fs-md);font-weight:700;cursor:pointer;}
+.set .cur-note{margin:4px;font-size:var(--fs-xs);color:var(--sub);}
+#curBd{z-index:22;} #curSheet{z-index:23;}
+.cur-pick{max-height:60vh;overflow-y:auto;}
+.cur-pick button{display:block;width:100%;min-height:48px;padding:0 4px;border:none;border-bottom:1px solid var(--line);background:none;color:var(--ink);font-size:var(--fs-md);text-align:left;cursor:pointer;}
+.cur-msg{padding:var(--sp-2) 4px;font-size:var(--fs-sm);color:var(--sub);}
 .set .ver{margin-top:var(--sp-2);font-size:var(--fs-xs);color:var(--sub);text-align:center;}
 
 /* 인라인 SVG 아이콘 (Lucide). currentColor로 버튼 색을 따라감 */
@@ -452,15 +462,6 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
       <div class="rate-group">
         <div class="rate-row">
           <select class="rate-select" id="fromCur" onchange="convertFX()">
-            <option value="KRW">🇰🇷 KRW 원</option>
-            <option value="USD">🇺🇸 USD 달러</option>
-            <option value="CNY">🇨🇳 CNY 위안</option>
-            <option value="VND">🇻🇳 VND 동</option>
-            <option value="JPY">🇯🇵 JPY 엔</option>
-            <option value="EUR">🇪🇺 EUR 유로</option>
-            <option value="CAD">🇨🇦 CAD 달러</option>
-            <option value="AUD">🇦🇺 AUD 달러</option>
-            <option value="PEN">🇵🇪 PEN 솔</option>
           </select>
           <input class="rate-input" id="fromVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX('from')">
         </div>
@@ -476,15 +477,6 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
       <div class="rate-group">
         <div class="rate-row">
           <select class="rate-select" id="toCur" onchange="convertFX()">
-            <option value="USD">🇺🇸 USD 달러</option>
-            <option value="KRW">🇰🇷 KRW 원</option>
-            <option value="CNY">🇨🇳 CNY 위안</option>
-            <option value="VND">🇻🇳 VND 동</option>
-            <option value="JPY">🇯🇵 JPY 엔</option>
-            <option value="EUR">🇪🇺 EUR 유로</option>
-            <option value="CAD">🇨🇦 CAD 달러</option>
-            <option value="AUD">🇦🇺 AUD 달러</option>
-            <option value="PEN">🇵🇪 PEN 솔</option>
           </select>
           <input class="rate-input" id="toVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX('to')">
         </div>
@@ -691,9 +683,22 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
     <div class="sheet-title">설정</div>
     <button class="ibtn" id="setClose" aria-label="닫기"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
   </div>
+  <div class="grp">통화 관리</div>
+  <div id="curList"></div>
+  <button class="cur-add" id="curAddBtn">+ 통화 추가</button>
   <div class="grp">정보</div>
-  <!-- 버전: sw.js의 CACHE_NAME을 올릴 때 이 표시도 같이 올린다 (v61 = 1.2.0) -->
-  <div class="ver">My Calc v1.2.0</div>
+  <!-- 버전: sw.js의 CACHE_NAME을 올릴 때 이 표시도 같이 올린다 (v62 = 1.2.1) -->
+  <div class="ver">My Calc v1.2.1</div>
+</div>
+
+<!-- 통화 추가 시트 -->
+<div class="backdrop" id="curBd"></div>
+<div class="sheet" id="curSheet" role="dialog" aria-label="통화 추가">
+  <div class="sheet-head">
+    <div class="sheet-title">통화 추가</div>
+    <button class="ibtn" id="curClose" aria-label="닫기"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+  </div>
+  <div class="cur-pick" id="curPick"></div>
 </div>
 
 <script>
@@ -1162,14 +1167,90 @@ function swapFX() {
   convertFX();
 }
 
+/* ── 통화 목록 (기본 6개, localStorage에 코드 배열로 저장) ── */
+const CUR_KEY = 'calcnote_currencies';
+const CUR_DEFAULT = ['USD','JPY','CNY','EUR','PEN'];
+const CUR_FLAG = {KRW:'🇰🇷',USD:'🇺🇸',JPY:'🇯🇵',CNY:'🇨🇳',EUR:'🇪🇺',PEN:'🇵🇪',GBP:'🇬🇧',CAD:'🇨🇦',AUD:'🇦🇺',NZD:'🇳🇿',CHF:'🇨🇭',HKD:'🇭🇰',SGD:'🇸🇬',THB:'🇹🇭',VND:'🇻🇳',PHP:'🇵🇭',IDR:'🇮🇩',MYR:'🇲🇾',TWD:'🇹🇼',INR:'🇮🇳',MXN:'🇲🇽',BRL:'🇧🇷'};
+const CUR_NAME = {KRW:'원',USD:'미국 달러',JPY:'일본 엔',CNY:'중국 위안',EUR:'유로(스페인 등)',PEN:'페루 솔'};
+const FX_DEFAULT_FROM = 'KRW', FX_DEFAULT_TO = 'USD';
+let curList = loadCurList();
+
+function loadCurList() {
+  try {
+    const a = JSON.parse(localStorage.getItem(CUR_KEY));
+    if (Array.isArray(a)) {
+      const ok = [...new Set(a.filter(c => typeof c === 'string' && /^[A-Z]{3}$/.test(c) && c !== 'KRW'))];
+      if (ok.length) return ok;
+    }
+  } catch(e) {}
+  return CUR_DEFAULT.slice();
+}
+function saveCurList() {
+  try { localStorage.setItem(CUR_KEY, JSON.stringify(curList)); } catch(e) {}
+}
+function curLabel(c) {
+  let name = CUR_NAME[c];
+  if (!name) {
+    try { name = new Intl.DisplayNames(['ko'], {type:'currency'}).of(c); } catch(e) {}
+    if (name === c) name = '';
+  }
+  return [CUR_FLAG[c], c, name].filter(Boolean).join(' ');
+}
+function curOptions() {
+  return ['KRW', ...curList].map(c => `<option value="${c}">${curLabel(c)}</option>`).join('');
+}
+/* 선택 목록·격자·설정 시트 목록을 현재 통화 목록으로 다시 그린다 */
+function renderCurrencies() {
+  const f = document.getElementById('fromCur'), t = document.getElementById('toCur');
+  const fv = f.value, tv = t.value;
+  f.innerHTML = curOptions(); t.innerHTML = curOptions();
+  const has = c => c === 'KRW' || curList.includes(c);
+  f.value = has(fv) ? fv : FX_DEFAULT_FROM;
+  t.value = has(tv) ? tv : (curList.includes(FX_DEFAULT_TO) ? FX_DEFAULT_TO : curList[0]);
+  if (Object.keys(fxRates).length) { convertFX(); renderQuick(); }
+  renderCurSettings();
+}
+function renderCurSettings() {
+  const trash = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+  document.getElementById('curList').innerHTML = curList.map(c => `
+    <div class="cur-row"><span class="cur-name">${curLabel(c)}</span>
+      <button class="cur-del" data-cur="${c}" aria-label="${c} 삭제"${curList.length<=1?' disabled':''}>${trash}</button></div>`).join('')
+    + '<div class="cur-note">원화(KRW)는 기준 통화라 삭제할 수 없어요. 최소 1개는 남겨야 해요.</div>';
+}
+document.getElementById('curList').onclick = e => {
+  const b = e.target.closest('.cur-del');
+  if (!b || b.disabled || curList.length <= 1) return;
+  curList = curList.filter(c => c !== b.dataset.cur);
+  saveCurList(); renderCurrencies();
+};
+
+const curBd = document.getElementById('curBd'), curSheet = document.getElementById('curSheet');
+function hideCurAdd() { curBd.classList.remove('show'); curSheet.classList.remove('show'); }
+function closeCurAdd() { ovClose('curadd'); }
+document.getElementById('curAddBtn').onclick = () => {
+  const codes = Object.keys(fxRates).filter(c => c !== 'KRW' && !curList.includes(c)).sort();
+  const box = document.getElementById('curPick');
+  if (!Object.keys(fxRates).length) box.innerHTML = '<div class="cur-msg">환율 정보를 불러온 뒤 추가할 수 있어요.</div>';
+  else if (!codes.length) box.innerHTML = '<div class="cur-msg">추가할 수 있는 통화가 더 없어요.</div>';
+  else box.innerHTML = codes.map(c => `<button data-cur="${c}">${curLabel(c)}</button>`).join('');
+  box.scrollTop = 0;
+  ovOpen('curadd', () => { curBd.classList.add('show'); curSheet.classList.add('show'); }, hideCurAdd);
+};
+document.getElementById('curPick').onclick = e => {
+  const b = e.target.closest('button[data-cur]');
+  if (!b) return;
+  if (!curList.includes(b.dataset.cur)) curList.push(b.dataset.cur);
+  saveCurList(); renderCurrencies(); closeCurAdd();
+};
+curBd.onclick = closeCurAdd;
+document.getElementById('curClose').onclick = closeCurAdd;
+
 function renderQuick() {
-  const pairs = ['USD','JPY','CNY','VND','EUR','CAD','AUD','PEN'];
-  const flags = {USD:'🇺🇸',JPY:'🇯🇵',CNY:'🇨🇳',VND:'🇻🇳',EUR:'🇪🇺',CAD:'🇨🇦',AUD:'🇦🇺',PEN:'🇵🇪'};
-  document.getElementById('quickGrid').innerHTML = pairs.map(c => `
+  document.getElementById('quickGrid').innerHTML = curList.filter(c => fxRates[c]).map(c => `
     <div class="quick-card" onclick="setQuick('${c}')">
-      <div class="quick-code">${flags[c]} ${c}</div>
+      <div class="quick-code">${CUR_FLAG[c] ? CUR_FLAG[c] + ' ' : ''}${c}</div>
       <div class="quick-val">
-        ₩1,000 = ${CUR_SYMBOL[c]}${c==='JPY'
+        ₩1,000 = ${CUR_SYMBOL[c] || c + ' '}${c==='JPY'
           ? (1000*fxRates[c]).toFixed(1)
           : c==='VND'
           ? numFmt(Math.round(1000*fxRates[c]))
@@ -1185,6 +1266,7 @@ function setQuick(c) {
   convertFX('from');
 }
 
+renderCurrencies();
 loadFX();
 
 /* ══════════════════════════════
