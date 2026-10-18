@@ -116,7 +116,6 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 ══════════════════════════════ */
 .calc-display{
   background:transparent;
-  height:140px;
   overflow:hidden;
   display:flex;flex-direction:column;
 }
@@ -139,6 +138,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
   text-align:right;word-break:break-all;
   line-height:1.3;margin-top:4px;
 }
+.calc-result-row:empty{display:none;}
 /* 버튼 그리드 */
 .calc-back-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;}
 .calc-back-row .btn-back{grid-column:4;}
@@ -153,9 +153,10 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .btn-num{background:var(--card);border:1.5px solid var(--line);color:var(--ink);font-size:26px;}
 .btn-op{background:var(--accent-soft);color:var(--accent);font-size:26px;font-weight:700;}
 .btn-eq{background:var(--accent);color:#fff;font-size:26px;}
-.btn-clear{background:var(--danger-soft);color:var(--danger);font-size:20px;font-weight:700;}
+.btn-clear{background:var(--danger-soft);color:var(--danger);font-size:26px;font-weight:700;}
 .btn-back{background:transparent;border:none;color:var(--ink);font-size:26px;}
 .btn-back .ico{width:34px;height:34px;}
+.ico-filled{fill:currentColor;stroke:none;}
 .calc-keypad-card{padding-top:8px;}
 
 /* ══════════════════════════════
@@ -405,7 +406,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
    </div>
    <div class="tab-card calc-keypad-card">
     <div class="calc-back-row">
-      <button class="btn btn-back" id="btnBack" onclick="ci('⌫')"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"/><path d="m12 9 6 6"/><path d="m18 9-6 6"/></svg></button>
+      <button class="btn btn-back" id="btnBack" onclick="ci('⌫')"><svg class="ico ico-filled" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 5a2 2 0 0 1 1.995 1.85l.005 .15v10a2 2 0 0 1 -1.85 1.995l-.15 .005h-11a1 1 0 0 1 -.608 -.206l-.1 -.087l-5.037 -5.04c-.809 -.904 -.847 -2.25 -.083 -3.23l.12 -.144l5 -5a1 1 0 0 1 .577 -.284l.131 -.009h11zm-7.489 4.14a1 1 0 0 0 -1.301 1.473l.083 .094l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.403 1.403l.094 -.083l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.403 -1.403l-.083 -.094l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.403 -1.403l-.094 .083l-1.293 1.292l-1.293 -1.292l-.094 -.083l-.102 -.07z"/></svg></button>
     </div>
     <div class="calc-grid">
       <button class="btn btn-clear"  onclick="ci('C')">C</button>
@@ -817,6 +818,23 @@ function numFmt(n) {
   return dec !== undefined ? fmtInt + '.' + dec : fmtInt;
 }
 
+// 화면 표시용 소수 자릿수 (내부 값·이어 계산에는 영향 없음)
+const DISPLAY_DECIMALS = 8;
+
+// 문자열 안의 숫자를 DISPLAY_DECIMALS 자리로 반올림하고 끝의 0 제거 (표시 전용)
+function roundDisp(s) {
+  return String(s).replace(/-?\d[\d,]*(?:\.\d+)?(?:e[+-]\d+)?/g, (tok) => {
+    const m = tok.match(/^(-?)([\d,]+)(?:\.(\d+))?(e[+-]\d+)?$/);
+    if (!m || (!m[4] && (!m[3] || m[3].length <= DISPLAY_DECIMALS))) return tok;
+    const v = Number(tok.replace(/,/g, ''));
+    if (!isFinite(v) || Math.abs(v) >= 1e21) return tok;
+    const fixed = v.toFixed(DISPLAY_DECIMALS).replace(/\.?0+$/, '');
+    const [int, dec] = fixed.replace(/^-/, '').split('.');
+    const neg = v < 0 && fixed !== '-0' && /[1-9]/.test(fixed) ? '-' : '';
+    return neg + int.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (dec ? '.' + dec : '');
+  });
+}
+
 function colorExpr(s) {
   return s.replace(/([÷×−+])/g, '<span class="op">$1</span>');
 }
@@ -923,20 +941,20 @@ function renderCalc() {
   const sep  = document.getElementById('historySep');
   if (calcHist.length > 0) {
     hEl.innerHTML = calcHist.map((h,i) =>
-      `<div class="history-line" onclick="useHist(${i})">${commaExpr(h.expr)} = ${h.result}</div>`
+      `<div class="history-line" onclick="useHist(${i})">${roundDisp(commaExpr(h.expr))} = ${roundDisp(h.result)}</div>`
     ).join('');
     sep.style.display = 'block';
   } else { hEl.innerHTML = ''; sep.style.display = 'none'; }
 
   // 수식 표시
   document.getElementById('calcExpr').innerHTML =
-    colorExpr(commaExpr(evaled ? curDisp : (curExpr || '0')));
+    colorExpr(evaled ? roundDisp(commaExpr(curDisp)) : commaExpr(curExpr || '0'));
 
   // 실시간 미리보기
   let preview = '';
   if (!evaled && curExpr && !OPS.includes(curExpr.slice(-1)) && curExpr !== curDisp) {
     const r = tryEval(curExpr);
-    if (r !== null) preview = '= ' + numFmt(r);
+    if (r !== null) preview = '= ' + roundDisp(numFmt(r));
   }
   document.getElementById('calcPreview').textContent = preview;
 }
