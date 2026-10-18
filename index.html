@@ -388,7 +388,11 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .cur-note{margin:var(--sp-1) 4px 0;font-size:var(--fs-xs);color:var(--sub);}
 .sub-list{max-height:60vh;overflow-y:auto;}
 #curDelBd,#curBd{z-index:22;} #curDelSheet,#curSheet{z-index:23;}
-.cur-pick{max-height:60vh;overflow-y:auto;}
+.cur-pick{max-height:60vh;max-height:min(60vh,calc(100dvh - 190px));overflow-y:auto;}
+.cur-search{display:flex;align-items:center;gap:8px;height:44px;margin:0 0 var(--sp-1);padding:0 12px;border:1px solid var(--line-strong);border-radius:12px;background:var(--card);color:var(--sub);}
+.cur-search:focus-within{border-color:var(--accent);}
+.cur-search .ico{font-size:20px;flex-shrink:0;}
+.cur-search input{flex:1;min-width:0;height:100%;border:none;outline:none;background:none;font-family:inherit;font-size:16px;color:var(--ink);}
 .cur-pick .cur-msg.ok{color:var(--accent-ink);padding-bottom:var(--sp-1);}
 .cur-pick button{display:block;width:100%;min-height:48px;padding:0 4px;border:none;border-bottom:1px solid var(--line);background:none;color:var(--ink);font-size:var(--fs-md);text-align:left;cursor:pointer;}
 .cur-msg{padding:var(--sp-2) 4px;font-size:var(--fs-sm);color:var(--sub);}
@@ -694,9 +698,8 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
   <div class="grp">통화</div>
   <button class="set-row" id="curDelBtn"><span class="row-text">통화 삭제</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
   <button class="set-row" id="curAddBtn"><span class="row-text">통화 추가</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
-  <div class="grp">정보</div>
-  <!-- 버전: sw.js의 CACHE_NAME을 올릴 때 이 표시도 같이 올린다 (v63 = 1.2.2) -->
-  <div class="ver">My Calc v1.2.2</div>
+  <!-- 버전: sw.js의 CACHE_NAME을 올릴 때 이 표시도 같이 올린다 (v64 = 1.2.3) -->
+  <div class="ver">v1.2.3</div>
 </div>
 
 <!-- 통화 삭제 시트 -->
@@ -717,6 +720,10 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
     <div class="sheet-title">통화 추가</div>
     <button class="ibtn" id="curClose" aria-label="닫기"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
   </div>
+  <label class="cur-search">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+    <input id="curQ" type="text" placeholder="국가명, 통화명, 코드 검색" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="통화 검색">
+  </label>
   <div class="cur-pick" id="curPick"></div>
 </div>
 
@@ -1244,7 +1251,8 @@ document.getElementById('curList').onclick = e => {
 };
 
 const curBd = document.getElementById('curBd'), curSheet = document.getElementById('curSheet');
-function hideCurAdd() { curBd.classList.remove('show'); curSheet.classList.remove('show'); }
+const curQ = document.getElementById('curQ');
+function hideCurAdd() { curQ.value = ''; curBd.classList.remove('show'); curSheet.classList.remove('show'); }
 function closeCurAdd() { ovClose('curadd'); }
 const curDelBd = document.getElementById('curDelBd'), curDelSheet = document.getElementById('curDelSheet');
 function hideCurDel() { curDelBd.classList.remove('show'); curDelSheet.classList.remove('show'); }
@@ -1255,15 +1263,31 @@ document.getElementById('curDelBtn').onclick = () => {
 curDelBd.onclick = closeCurDel;
 document.getElementById('curDelClose').onclick = closeCurDel;
 
+/* 검색 대상: 한글 통화명 + 코드 + 영문 통화명 (대소문자·공백 무시) */
+const curNorm = x => String(x || '').toLowerCase().replace(/\s+/g, '');
+let curDN = null;
+function curSearchText(c) {
+  if (!curDN) {
+    try { curDN = [new Intl.DisplayNames(['ko'], {type:'currency'}), new Intl.DisplayNames(['en'], {type:'currency'})]; }
+    catch(e) { curDN = []; }
+  }
+  const n = curDN.map(d => { try { return d.of(c); } catch(e) { return ''; } });
+  return curNorm([n[0], c, n[1]].join(' '));
+}
 function fillCurPick(added) {
-  const codes = Object.keys(fxRates).filter(c => c !== 'KRW' && !curList.includes(c)).sort();
+  const q = curNorm(curQ.value);
+  const all = Object.keys(fxRates).filter(c => c !== 'KRW' && !curList.includes(c)).sort();
+  const codes = q ? all.filter(c => curSearchText(c).includes(q)) : all;
   const box = document.getElementById('curPick');
   if (!Object.keys(fxRates).length) box.innerHTML = '<div class="cur-msg">환율 정보를 불러온 뒤 추가할 수 있어요.</div>';
-  else if (!codes.length) box.innerHTML = '<div class="cur-msg">추가할 수 있는 통화가 더 없어요.</div>';
+  else if (!all.length) box.innerHTML = '<div class="cur-msg">추가할 수 있는 통화가 더 없어요.</div>';
+  else if (!codes.length) box.innerHTML = added ? '' : '<div class="cur-msg">찾는 통화가 없어요. 환율 서비스가 지원하지 않을 수 있어요.</div>';
   else box.innerHTML = codes.map(c => `<button data-cur="${c}">${curLabel(c)}</button>`).join('');
   if (added) box.insertAdjacentHTML('afterbegin', `<div class="cur-msg ok">${curLabel(added)} 추가했어요</div>`);
 }
+curQ.oninput = () => { fillCurPick(); document.getElementById('curPick').scrollTop = 0; };
 document.getElementById('curAddBtn').onclick = () => {
+  curQ.value = '';
   fillCurPick();
   document.getElementById('curPick').scrollTop = 0;
   ovOpen('curadd', () => { curBd.classList.add('show'); curSheet.classList.add('show'); }, hideCurAdd);
