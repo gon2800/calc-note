@@ -144,7 +144,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .calc-result-row:empty{display:none;}
 #calcPreview{display:none !important;}
 /* 버튼 그리드 */
-.calc-back-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;}
+.calc-back-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;align-items:center;}
 .calc-back-row .btn-back{grid-column:4;}
 .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
 .btn{
@@ -158,8 +158,9 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .btn-op{background:var(--accent-soft);color:var(--accent);font-size:26px;font-weight:700;}
 .btn-eq{background:var(--accent);color:#fff;font-size:26px;}
 .btn-clear{background:var(--danger-soft);color:var(--danger);font-size:26px;font-weight:700;}
-.btn-back{background:#5B54E8;border:none;color:#fff;font-size:26px;}
-.btn-back .ico{width:34px;height:34px;}
+.btn-back{background:transparent;border:none;width:56px;height:44px;justify-self:end;padding:0;transition:filter 0.08s;}
+.btn-back:active{transform:none;filter:brightness(0.8);}
+.back-ico{display:block;}
 .ico-filled{fill:currentColor;stroke:none;}
 .calc-keypad-card{padding-top:8px;}
 
@@ -201,7 +202,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .quick-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
 .quick-title{font-size:13px;color:var(--sub);font-weight:600;}
 .quick-status{font-size:11px;color:var(--sub);}
-.quick-code{font-size:15px;font-weight:700;color:var(--ink);}
+.quick-code{font-size:15px;font-weight:700;color:var(--ink);white-space:nowrap;}
 .quick-val{font-size:13px;color:var(--sub);margin-top:4px;text-align:right;}
 
 /* ══════════════════════════════
@@ -410,7 +411,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
    </div>
    <div class="tab-card calc-keypad-card">
     <div class="calc-back-row">
-      <button class="btn btn-back" id="btnBack" onclick="ci('⌫')"><svg class="ico ico-filled" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 5a2 2 0 0 1 1.995 1.85l.005 .15v10a2 2 0 0 1 -1.85 1.995l-.15 .005h-11a1 1 0 0 1 -.608 -.206l-.1 -.087l-5.037 -5.04c-.809 -.904 -.847 -2.25 -.083 -3.23l.12 -.144l5 -5a1 1 0 0 1 .577 -.284l.131 -.009h11zm-7.489 4.14a1 1 0 0 0 -1.301 1.473l.083 .094l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.403 1.403l.094 -.083l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.403 -1.403l-.083 -.094l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.403 -1.403l-.094 .083l-1.293 1.292l-1.293 -1.292l-.094 -.083l-.102 -.07z"/></svg></button>
+      <button class="btn btn-back" id="btnBack" onclick="ci('⌫')"><svg class="back-ico" viewBox="0 0 56 40" width="56" height="40" aria-hidden="true"><path fill="#5B54E8" fill-rule="evenodd" d="M21 3H50a4 4 0 0 1 4 4V33a4 4 0 0 1-4 4H21a4 4 0 0 1-2.9-1.2L4.2 22.1a3 3 0 0 1 0-4.2L18.1 4.2A4 4 0 0 1 21 3ZM23.87 13.13 26.13 10.87 33 17.74 39.87 10.87 42.13 13.13 35.26 20 42.13 26.87 39.87 29.13 33 22.26 26.13 29.13 23.87 26.87 30.74 20Z"/></svg></button>
     </div>
     <div class="calc-grid">
       <button class="btn btn-clear"  onclick="ci('C')">C</button>
@@ -443,15 +444,15 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
       <div class="rate-group">
         <div class="rate-row">
           <select class="rate-select" id="fromCur" onchange="convertFX()">
-            <option value="KRW">KRW 원</option>
-            <option value="USD">USD 달러</option>
-            <option value="CNY">CNY 위안</option>
-            <option value="VND">VND 동</option>
-            <option value="JPY">JPY 엔</option>
-            <option value="EUR">EUR 유로</option>
-            <option value="CAD">CAD 달러</option>
-            <option value="AUD">AUD 달러</option>
-            <option value="PEN">PEN 솔</option>
+            <option value="KRW">🇰🇷 KRW 원</option>
+            <option value="USD">🇺🇸 USD 달러</option>
+            <option value="CNY">🇨🇳 CNY 위안</option>
+            <option value="VND">🇻🇳 VND 동</option>
+            <option value="JPY">🇯🇵 JPY 엔</option>
+            <option value="EUR">🇪🇺 EUR 유로</option>
+            <option value="CAD">🇨🇦 CAD 달러</option>
+            <option value="AUD">🇦🇺 AUD 달러</option>
+            <option value="PEN">🇵🇪 PEN 솔</option>
           </select>
           <input class="rate-input" id="fromVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX('from')">
         </div>
@@ -467,15 +468,15 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
       <div class="rate-group">
         <div class="rate-row">
           <select class="rate-select" id="toCur" onchange="convertFX()">
-            <option value="USD">USD 달러</option>
-            <option value="KRW">KRW 원</option>
-            <option value="CNY">CNY 위안</option>
-            <option value="VND">VND 동</option>
-            <option value="JPY">JPY 엔</option>
-            <option value="EUR">EUR 유로</option>
-            <option value="CAD">CAD 달러</option>
-            <option value="AUD">AUD 달러</option>
-            <option value="PEN">PEN 솔</option>
+            <option value="USD">🇺🇸 USD 달러</option>
+            <option value="KRW">🇰🇷 KRW 원</option>
+            <option value="CNY">🇨🇳 CNY 위안</option>
+            <option value="VND">🇻🇳 VND 동</option>
+            <option value="JPY">🇯🇵 JPY 엔</option>
+            <option value="EUR">🇪🇺 EUR 유로</option>
+            <option value="CAD">🇨🇦 CAD 달러</option>
+            <option value="AUD">🇦🇺 AUD 달러</option>
+            <option value="PEN">🇵🇪 PEN 솔</option>
           </select>
           <input class="rate-input" id="toVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX('to')">
         </div>
@@ -1116,9 +1117,10 @@ function swapFX() {
 
 function renderQuick() {
   const pairs = ['USD','JPY','CNY','VND','EUR','CAD','AUD','PEN'];
+  const flags = {USD:'🇺🇸',JPY:'🇯🇵',CNY:'🇨🇳',VND:'🇻🇳',EUR:'🇪🇺',CAD:'🇨🇦',AUD:'🇦🇺',PEN:'🇵🇪'};
   document.getElementById('quickGrid').innerHTML = pairs.map(c => `
     <div class="quick-card" onclick="setQuick('${c}')">
-      <div class="quick-code">${c}</div>
+      <div class="quick-code">${flags[c]} ${c}</div>
       <div class="quick-val">
         ₩1,000 = ${CUR_SYMBOL[c]}${c==='JPY'
           ? (1000*fxRates[c]).toFixed(1)
