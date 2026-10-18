@@ -17,7 +17,13 @@
 // v53: 앱 아이콘 새 세트로 교체(icon-192/512, favicon-32). maskable 별도 파일 제거 →
 //      manifest는 192(any)·512(any maskable) 2개, precache 목록에서 maskable 항목 삭제.
 // v54: 앱 이름 "계산 노트"/"My Calculator" → "My Calc" 통일(manifest, title, 헤더, alt, apple 메타).
-const CACHE_NAME = 'calc-note-v54';
+// v55: 디자인 1단계 — Pretendard 글꼴용 별도 캐시(FONT_CACHE) 추가(앱 캐시 정리 때 보존).
+//      화면 폭 520px, 여백·간격·그림자·입력칸 모서리 규칙값 적용.
+const CACHE_NAME = 'calc-note-v55';
+
+// 글꼴 전용 캐시: 앱 캐시 버전이 바뀌어도 유지된다 (이름의 -v1은 글꼴 자체를 바꿀 때만 올림).
+const FONT_CACHE = 'calc-note-fonts-v1';
+const FONT_HOST = 'https://cdn.jsdelivr.net';
 
 // network-first: 배포마다 바뀔 수 있는 앱 셸 / 코드
 // '/index.html'은 넣지 않는다 — Cloudflare Pages가 '/'로 308 리다이렉트하므로
@@ -68,7 +74,7 @@ self.addEventListener('activate', (event) => {
     caches
       .keys()
       .then((keys) =>
-        Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
+        Promise.all(keys.filter((key) => key !== CACHE_NAME && key !== FONT_CACHE).map((key) => caches.delete(key)))
       )
       .then(() => self.clients.claim())
   );
@@ -129,6 +135,25 @@ self.addEventListener('fetch', (event) => {
 
   // GET만 처리. 환율 API 등 외부(cross-origin) 요청은 건드리지 않고 흘려보냄.
   if (request.method !== 'GET') return;
+
+  // Pretendard 글꼴(jsdelivr): 캐시 우선, 없으면 받아서 저장. 다른 도메인 통과 줄보다 앞에 둔다.
+  // 오프라인에서 못 받으면 그냥 실패(시스템 글꼴로 표시) — HTML을 대신 내주지 않는다.
+  if (request.url.startsWith(FONT_HOST)) {
+    event.respondWith(
+      caches.open(FONT_CACHE).then((cache) =>
+        cache.match(request).then(
+          (hit) =>
+            hit ||
+            fetch(request).then((res) => {
+              if (res.ok) cache.put(request, res.clone()).catch(() => {});
+              return res;
+            })
+        )
+      )
+    );
+    return;
+  }
+
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
