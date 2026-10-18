@@ -122,20 +122,20 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 }
 .calc-history{overflow-y:auto;max-height:64px;margin-bottom:4px;}
 .history-line{
-  font-size:12px;color:var(--sub);
+  font-size:13px;color:var(--sub);
   text-align:right;line-height:1.7;
   cursor:pointer;padding:1px 0;
 }
 .history-line:hover{color:var(--accent);}
 .history-sep{margin:4px 0;}
 .calc-expr-row{
-  font-size:28px;font-weight:400;color:var(--ink);
+  font-size:28px;font-weight:500;color:var(--ink);
   text-align:right;min-height:36px;
   word-break:break-all;line-height:1.2;
 }
 .calc-expr-row .op{color:var(--accent);font-weight:600;}
 .calc-result-row{
-  font-size:20px;font-weight:400;color:var(--sub);
+  font-size:20px;font-weight:500;color:var(--sub);
   text-align:right;word-break:break-all;
   line-height:1.3;margin-top:4px;
 }
@@ -150,11 +150,12 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
   transition:transform 0.08s;user-select:none;
 }
 .btn:active{transform:scale(0.94);}
-.btn-num{background:var(--card);border:1.5px solid var(--line);color:var(--ink);font-size:24px;}
-.btn-op{background:var(--accent-soft);color:var(--accent);font-size:24px;font-weight:700;}
+.btn-num{background:var(--card);border:1.5px solid var(--line);color:var(--ink);font-size:26px;}
+.btn-op{background:var(--accent-soft);color:var(--accent);font-size:26px;font-weight:700;}
 .btn-eq{background:var(--accent);color:#fff;font-size:26px;}
 .btn-clear{background:var(--danger-soft);color:var(--danger);font-size:20px;font-weight:700;}
-.btn-back{background:transparent;border:none;color:var(--ink);font-size:34px;}
+.btn-back{background:transparent;border:none;color:var(--ink);font-size:26px;}
+.btn-back .ico{width:34px;height:34px;}
 .calc-keypad-card{padding-top:8px;}
 
 /* ══════════════════════════════
@@ -165,13 +166,13 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .rate-select{
   flex:1;min-width:0;height:40px;border-radius:14px;
   border:1.5px solid var(--line);padding:0 8px;
-  font-size:15px;font-weight:700;background:var(--bg);color:var(--ink);text-align:center;
+  font-size:16px;font-weight:700;background:var(--bg);color:var(--ink);text-align:center;
   -webkit-appearance:none;appearance:none;
 }
 .rate-input{
   flex:1.5;min-width:0;width:0;height:40px;border-radius:14px;
   border:2px solid var(--accent);padding:0 10px;
-  font-size:15px;font-weight:500;
+  font-size:16px;font-weight:500;
   background:var(--card);color:var(--ink);text-align:right;
 }
 .rate-swap{
@@ -192,6 +193,11 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
   padding:10px 12px;cursor:pointer;
 }
 .quick-card:active{background:var(--accent-soft);}
+.quick-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.quick-title{font-size:13px;color:var(--sub);font-weight:600;}
+.quick-status{font-size:11px;color:var(--sub);}
+.quick-code{font-size:15px;font-weight:700;color:var(--ink);}
+.quick-val{font-size:13px;color:var(--sub);margin-top:4px;text-align:right;}
 
 /* ══════════════════════════════
    단위
@@ -199,7 +205,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .unit-tabs{display:flex;gap:4px;background:transparent;border-radius:12px;padding:4px;margin-top:0;}
 .unit-tab{
   flex:1;text-align:center;
-  padding:8px 4px;border-radius:9px;font-size:12px;font-weight:700;
+  padding:8px 4px;border-radius:9px;font-size:13px;font-weight:700;
   border:2px solid var(--line);background:var(--card);
   cursor:pointer;color:var(--sub);
 }
@@ -208,13 +214,13 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .unit-select{
   flex:1;min-width:0;height:40px;border-radius:14px;
   border:1.5px solid var(--line);padding:0 8px;
-  font-size:15px;font-weight:700;background:var(--bg);color:var(--ink);text-align:center;
+  font-size:16px;font-weight:700;background:var(--bg);color:var(--ink);text-align:center;
   -webkit-appearance:none;appearance:none;
 }
 .unit-val{
   flex:1.5;min-width:0;width:0;height:40px;border-radius:14px;
   border:2px solid var(--accent);padding:0 10px;
-  font-size:15px;font-weight:500;
+  font-size:16px;font-weight:500;
   background:var(--card);color:var(--ink);text-align:right;
 }
 .unit-eq-text{font-size:11px;color:var(--sub);text-align:right;margin-top:6px;}
@@ -230,11 +236,11 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
   text-align:center;
 }
 .date-input-year{flex:1.3;}
-.date-input::placeholder{font-size:13px;font-weight:300;}
+.date-input::placeholder{font-size:13px;font-weight:500;}
 .primary-btn{
   width:100%;height:46px;border-radius:14px;
   background:var(--accent);color:#fff;border:none;
-  font-size:16px;font-weight:700;cursor:pointer;margin-top:12px;
+  font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;
 }
 .primary-btn:active{background:var(--accent-dark);}
 .age-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -245,7 +251,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 }
 .result-label{font-size:11px;color:var(--sub);margin-bottom:4px;}
 .result-val{font-size:26px;font-weight:700;color:var(--accent);}
-.result-val.small{font-size:17px;}
+.result-val.small{font-size:15px;}
 .result-sub{font-size:11px;color:var(--sub);margin-top:2px;}
 .age-detail{
   background:var(--bg);border-radius:var(--radius);
@@ -258,7 +264,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .more-btn{
   display:block;width:100%;text-align:center;
   background:none;border:none;color:var(--accent);
-  font-size:12px;font-weight:700;cursor:pointer;
+  font-size:13px;font-weight:700;cursor:pointer;
   padding:12px 0 0;
 }
 
@@ -266,21 +272,21 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
    옥외광고
 ══════════════════════════════ */
 .oa-title{
-  font-size:13px;font-weight:700;color:var(--ink);
+  font-size:13px;font-weight:800;color:var(--ink);
   margin-bottom:10px;
 }
 .oa-row{
   display:flex;align-items:center;
-  padding:8px 0;border-bottom:2px solid var(--line-strong);
+  padding:8px 0;border-bottom:1px solid var(--line);
 }
 .oa-row:last-child{border-bottom:none;}
 .oa-label{font-size:13px;color:var(--sub);flex:1;}
-.oa-unit{font-size:12px;color:var(--sub);width:30px;text-align:right;margin-left:4px;flex-shrink:0;}
+.oa-unit{font-size:11px;color:var(--sub);width:30px;text-align:right;margin-left:4px;flex-shrink:0;}
 .oa-input{
   width:130px;text-align:right;
   background:var(--card);border:2px solid var(--accent);
   border-radius:14px;padding:5px 8px;
-  font-size:15px;color:var(--ink);font-weight:600;
+  font-size:16px;color:var(--ink);font-weight:600;
 }
 .oa-calc{
   width:130px;text-align:right;
@@ -297,17 +303,17 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .pa-tile .oa-title{margin-bottom:8px;}
 .pa-tile .oa-row{padding:6px 0;border-bottom:none;}
 .oa-row-sub{display:flex;align-items:center;padding:4px 0 4px 16px;}
-.oa-row-sub .oa-label{font-size:12px;color:var(--sub);}
-.oa-row-sub .oa-input{width:90px;font-size:13px;padding:4px 6px;}
+.oa-row-sub .oa-label{font-size:13px;color:var(--sub);}
+.oa-row-sub .oa-input{width:90px;font-size:16px;padding:4px 6px;}
 .oa-row-sub .oa-calc{width:110px;font-size:13px;padding:4px 6px;}
 .oa-row-sub .oa-unit{font-size:11px;}
-.pa-bullet{font-size:12px;color:var(--sub);flex-shrink:0;margin-right:4px;}
+.pa-bullet{font-size:11px;color:var(--sub);flex-shrink:0;margin-right:4px;}
 
 .pa-commission-row{gap:4px;}
 .pa-commission-row .oa-label{flex:none;white-space:nowrap;}
 .pa-commission-row .oa-input{width:44px;flex-shrink:0;padding:4px 4px;text-align:right;}
 .pa-commission-row .oa-unit{width:auto;flex-shrink:0;margin-left:0;margin-right:2px;}
-.pa-commission-row .pa-arrow{color:var(--sub);font-size:12px;flex-shrink:0;}
+.pa-commission-row .pa-arrow{color:var(--sub);font-size:11px;width:12px;height:12px;flex-shrink:0;}
 .pa-commission-row .oa-calc{flex:1;min-width:0;width:auto;text-align:right;padding:4px 4px;}
 
 .pa-detail{margin-top:10px;}
@@ -319,7 +325,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .pa-table td.pa-table-label{color:var(--sub);font-weight:600;}
 .pa-table td.pa-table-sub{font-weight:700;color:var(--accent);}
 .pa-table tr:not(.pa-table-section) td{border-bottom:1px solid var(--line);}
-.pa-table tr.pa-table-section td{padding-top:10px;font-weight:800;color:var(--ink);font-size:11px;border-bottom:none;}
+.pa-table tr.pa-table-section td{padding-top:10px;font-weight:700;color:var(--ink);font-size:11px;border-bottom:none;}
 .pa-table tr.pa-table-section:first-child td{padding-top:2px;}
 .pa-cost-row{
   display:flex;align-items:center;gap:6px;
@@ -328,14 +334,14 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .pa-cost-name{
   flex:1;min-width:0;
   background:var(--bg);border:1.5px solid var(--line);border-radius:8px;
-  padding:6px 8px;font-size:12px;color:var(--sub);
+  padding:6px 8px;font-size:16px;color:var(--sub);
 }
 .pa-cost-amt{
   width:100px;flex-shrink:0;text-align:right;
   background:var(--accent-soft);border:2px solid var(--accent);border-radius:8px;
-  padding:6px 8px;font-size:14px;font-weight:600;color:var(--ink);
+  padding:6px 8px;font-size:16px;font-weight:600;color:var(--ink);
 }
-.pa-cost-unit{font-size:12px;color:var(--sub);flex-shrink:0;}
+.pa-cost-unit{font-size:11px;color:var(--sub);flex-shrink:0;}
 .pa-add-btn{
   display:flex;align-items:center;justify-content:center;gap:4px;
   width:100%;height:38px;border-radius:10px;margin-top:8px;
@@ -353,18 +359,17 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 .pa-summary-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px;}
 .pa-summary-card{background:var(--bg);border-radius:var(--radius);padding:10px 6px;text-align:center;}
 .pa-summary-card .result-label{margin-bottom:6px;}
-.pa-summary-card .result-val{font-size:16px;}
+.pa-summary-card .result-val{font-size:15px;}
 
 .hidden{display:none;}
 
-/* 인라인 SVG 아이콘 (Tabler Icons, MIT). currentColor로 버튼 색을 따라감 */
-.svg-icon{
+/* 인라인 SVG 아이콘 (Lucide). currentColor로 버튼 색을 따라감 */
+.ico{
   width:1em;height:1em;flex-shrink:0;
   display:inline-block;vertical-align:-.125em;
   fill:none;stroke:currentColor;stroke-width:2;
   stroke-linecap:round;stroke-linejoin:round;
 }
-.svg-icon.is-filled{fill:currentColor;stroke:none;}
 </style>
 </head>
 <body>
@@ -400,7 +405,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
    </div>
    <div class="tab-card calc-keypad-card">
     <div class="calc-back-row">
-      <button class="btn btn-back" id="btnBack" onclick="ci('⌫')"><svg class="svg-icon is-filled" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 5a2 2 0 0 1 1.995 1.85l.005 .15v10a2 2 0 0 1 -1.85 1.995l-.15 .005h-11a1 1 0 0 1 -.608 -.206l-.1 -.087l-5.037 -5.04c-.809 -.904 -.847 -2.25 -.083 -3.23l.12 -.144l5 -5a1 1 0 0 1 .577 -.284l.131 -.009h11zm-7.489 4.14a1 1 0 0 0 -1.301 1.473l.083 .094l1.292 1.293l-1.292 1.293l-.083 .094a1 1 0 0 0 1.403 1.403l.094 -.083l1.293 -1.292l1.293 1.292l.094 .083a1 1 0 0 0 1.403 -1.403l-.083 -.094l-1.292 -1.293l1.292 -1.293l.083 -.094a1 1 0 0 0 -1.403 -1.403l-.094 .083l-1.293 1.292l-1.293 -1.292l-.094 -.083l-.102 -.07z"/></svg></button>
+      <button class="btn btn-back" id="btnBack" onclick="ci('⌫')"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"/><path d="m12 9 6 6"/><path d="m18 9-6 6"/></svg></button>
     </div>
     <div class="calc-grid">
       <button class="btn btn-clear"  onclick="ci('C')">C</button>
@@ -433,15 +438,15 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
       <div class="rate-group">
         <div class="rate-row">
           <select class="rate-select" id="fromCur" onchange="convertFX()">
-            <option value="KRW">🇰🇷 KRW 원</option>
-            <option value="USD">🇺🇸 USD 달러</option>
-            <option value="CNY">🇨🇳 CNY 위안</option>
-            <option value="VND">🇻🇳 VND 동</option>
-            <option value="JPY">🇯🇵 JPY 엔</option>
-            <option value="EUR">🇪🇺 EUR 유로</option>
-            <option value="CAD">🇨🇦 CAD 달러</option>
-            <option value="AUD">🇦🇺 AUD 달러</option>
-            <option value="PEN">🇵🇪 PEN 솔</option>
+            <option value="KRW">KRW 원</option>
+            <option value="USD">USD 달러</option>
+            <option value="CNY">CNY 위안</option>
+            <option value="VND">VND 동</option>
+            <option value="JPY">JPY 엔</option>
+            <option value="EUR">EUR 유로</option>
+            <option value="CAD">CAD 달러</option>
+            <option value="AUD">AUD 달러</option>
+            <option value="PEN">PEN 솔</option>
           </select>
           <input class="rate-input" id="fromVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX('from')">
         </div>
@@ -449,7 +454,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
       <div class="swap-row">
         <div class="swap-slot">
           <button class="rate-swap" onclick="swapFX()">
-            <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3l0 18"/><path d="M10 6l-3 -3l-3 3"/><path d="M20 18l-3 3l-3 -3"/><path d="M17 21l0 -18"/></svg>
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
           </button>
         </div>
         <div class="swap-spacer"></div>
@@ -457,15 +462,15 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
       <div class="rate-group">
         <div class="rate-row">
           <select class="rate-select" id="toCur" onchange="convertFX()">
-            <option value="USD">🇺🇸 USD 달러</option>
-            <option value="KRW">🇰🇷 KRW 원</option>
-            <option value="CNY">🇨🇳 CNY 위안</option>
-            <option value="VND">🇻🇳 VND 동</option>
-            <option value="JPY">🇯🇵 JPY 엔</option>
-            <option value="EUR">🇪🇺 EUR 유로</option>
-            <option value="CAD">🇨🇦 CAD 달러</option>
-            <option value="AUD">🇦🇺 AUD 달러</option>
-            <option value="PEN">🇵🇪 PEN 솔</option>
+            <option value="USD">USD 달러</option>
+            <option value="KRW">KRW 원</option>
+            <option value="CNY">CNY 위안</option>
+            <option value="VND">VND 동</option>
+            <option value="JPY">JPY 엔</option>
+            <option value="EUR">EUR 유로</option>
+            <option value="CAD">CAD 달러</option>
+            <option value="AUD">AUD 달러</option>
+            <option value="PEN">PEN 솔</option>
           </select>
           <input class="rate-input" id="toVal" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);convertFX('to')">
         </div>
@@ -473,9 +478,9 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
       </div>
    </div>
    <div class="tab-card">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
-        <span style="font-size:12px;color:var(--sub);font-weight:600;">주요 통화 (KRW 기준)</span>
-        <span style="font-size:11px;color:var(--sub);" id="fxStatusText">환율 불러오는 중...</span>
+      <div class="quick-head">
+        <span class="quick-title">주요 통화 (KRW 기준)</span>
+        <span class="quick-status" id="fxStatusText">환율 불러오는 중...</span>
       </div>
       <div class="quick-grid" id="quickGrid"></div>
    </div>
@@ -492,7 +497,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
       <div class="swap-row">
         <div class="swap-slot">
           <button class="rate-swap" onclick="swapUnit()">
-            <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3l0 18"/><path d="M10 6l-3 -3l-3 3"/><path d="M20 18l-3 3l-3 -3"/><path d="M17 21l0 -18"/></svg>
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
           </button>
         </div>
         <div class="swap-spacer"></div>
@@ -544,7 +549,7 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
           <div class="detail-row"><span class="k">태어난 지</span><span class="v" id="ageDays">–</span></div>
           <div class="detail-row"><span class="k">다음 생일까지</span><span class="v" id="ageNextBday">–</span></div>
         </div>
-        <button class="more-btn" id="moreBtn" onclick="toggleMore()">더 보기 <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg></button>
+        <button class="more-btn" id="moreBtn" onclick="toggleMore()">더 보기 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
         <div class="age-results" id="retireResults" style="display:none;">
           <div class="age-result-card">
             <div class="result-label">60세 퇴직일</div>
@@ -629,13 +634,13 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
         <span class="oa-label">영업수수료율</span>
         <input class="oa-input" id="pa_commission_rate" type="text" inputmode="decimal" placeholder="0" oninput="formatWithCommas(this,true);calcPA()">
         <span class="oa-unit">%</span>
-        <svg class="svg-icon pa-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l14 0"/><path d="M15 16l4 -4"/><path d="M15 8l4 4"/></svg>
+        <svg class="ico pa-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         <span class="oa-label">영업수수료</span>
         <span class="oa-calc" id="pa_commission_amt">–</span>
         <span class="oa-unit">천원</span>
       </div>
       <div id="pa_costList"></div>
-      <button class="pa-add-btn" onclick="addCostItem('','')" type="button"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>항목 추가</button>
+      <button class="pa-add-btn" onclick="addCostItem('','')" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>항목 추가</button>
 
       <div class="pa-summary-grid">
         <div class="pa-summary-card">
@@ -652,10 +657,10 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
         </div>
       </div>
 
-      <button class="more-btn" id="paMoreBtn" onclick="paToggleDetail()">펼쳐보기 <svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg></button>
+      <button class="more-btn" id="paMoreBtn" onclick="paToggleDetail()">펼쳐보기 <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
       <div class="pa-detail hidden" id="pa_detail_wrap">
         <div class="pa-table-scroll" id="pa_detail_table"></div>
-        <button class="pa-download-btn" id="pa_download_btn" onclick="downloadPAExcel()" type="button"><svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M8 11h8v7h-8z"/><path d="M8 15h8"/><path d="M11 11v7"/></svg>엑셀로 내려받기</button>
+        <button class="pa-download-btn" id="pa_download_btn" onclick="downloadPAExcel()" type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M8 13h2"/><path d="M14 13h2"/><path d="M8 17h2"/><path d="M14 17h2"/></svg>엑셀로 내려받기</button>
       </div>
 
       <div class="oa-footnote">WACC 9.16% · 법인세율 24.2% · 분석기간 5년 적용</div>
@@ -668,9 +673,9 @@ body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic
 <script>
 'use strict';
 
-/* 펼침/접힘 표시용 셰브런 아이콘 (Tabler Icons, MIT). .svg-icon 패턴과 통일 */
-const CHEVRON_DOWN = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>';
-const CHEVRON_UP   = '<svg class="svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>';
+/* 펼침/접힘 표시용 셰브런 아이콘 (Lucide). .ico 패턴과 통일 */
+const CHEVRON_DOWN = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+const CHEVRON_UP   = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>';
 
 /* ══════════════════════════════
    탭 전환
@@ -1088,15 +1093,11 @@ function swapFX() {
 }
 
 function renderQuick() {
-  const pairs = [['USD','🇺🇸'],['JPY','🇯🇵'],['CNY','🇨🇳'],['VND','🇻🇳'],
-                 ['EUR','🇪🇺'],['CAD','🇨🇦'],['AUD','🇦🇺'],['PEN','🇵🇪']];
-  document.getElementById('quickGrid').innerHTML = pairs.map(([c,f]) => `
+  const pairs = ['USD','JPY','CNY','VND','EUR','CAD','AUD','PEN'];
+  document.getElementById('quickGrid').innerHTML = pairs.map(c => `
     <div class="quick-card" onclick="setQuick('${c}')">
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span style="font-size:20px;">${f}</span>
-        <span style="font-size:13px;font-weight:600;color:var(--ink);">${c}</span>
-      </div>
-      <div style="font-size:12px;color:var(--sub);margin-top:4px;text-align:right;">
+      <div class="quick-code">${c}</div>
+      <div class="quick-val">
         ₩1,000 = ${CUR_SYMBOL[c]}${c==='JPY'
           ? (1000*fxRates[c]).toFixed(1)
           : c==='VND'
